@@ -39,7 +39,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
   Widget build(BuildContext context) => Scaffold(
     body: CustomScrollView(
       slivers: [
-        SliverAppBar.large(title: const Text('Stats')),
+        const SliverAppBar(pinned: true, title: Text('Stats')),
         ..._slivers(
           ref.watch(journalProvider),
           ref.watch(statsProvider(_range)),
@@ -321,11 +321,7 @@ class _SummaryCard extends StatelessWidget {
                     runSpacing: CorkSpace.sm,
                     children: [
                       for (final e in coloured)
-                        ChalkSwipe(
-                          color: e.tasting.color,
-                          seed: e.tasting.id.value,
-                          width: CorkTokens.swipeWidth / 2,
-                        ),
+                        GlassSwatch(e.tasting.color, size: 20),
                     ],
                   ),
                 ),

@@ -17,8 +17,8 @@ OWN-WORLD: Blue-green slate ground on an eleven-step slate ramp; chalk-white tex
 
 STORY: The owner sees their glasses as chalked colour, finds a wine instantly, logs it with WSET words offered but never demanded, and learns what they like from stats and badges.
 
-FIRST VIEWPORT: Slate top app bar "Cork" with search and filter actions. Month header in condensed caps. Tasting rows: label thumb or glass disc, wine name with a chalk swipe in the tasting's glass colour beneath, winery and vintage, score right-aligned in chalk yellow. Extended FAB "Log a glass" bottom right above a five-item navigation bar.
+FIRST VIEWPORT: Slate top app bar "Cork" with search and filter actions. Month header in condensed caps. Tasting rows: label thumb or glass disc, wine name, winery and vintage, score right-aligned in chalk yellow. Extended FAB "Log a glass" bottom right above a five-item navigation bar.
 
-FORM: Tasting-room chalk slate, position 7 of 7 on the grounded list. seed:acf3f3cfca52c471. Signature move: the chalk swipe, a dry-brush stroke of the actual glass colour.
+FORM: Tasting-room chalk slate, position 7 of 7 on the grounded list. seed:acf3f3cfca52c471.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

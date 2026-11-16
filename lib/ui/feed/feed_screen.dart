@@ -269,7 +269,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
         if (showActions)
           IconButton(
             tooltip: 'Filter',
-            icon: const Icon(Icons.filter_list_rounded),
+            icon: const Icon(Icons.sort_rounded),
             onPressed: () => _openFilters(journal),
           ),
       ],

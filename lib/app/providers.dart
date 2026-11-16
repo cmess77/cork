@@ -77,14 +77,3 @@ final statsProvider = Provider.family<JournalStats, StatsRange>((ref, range) {
     since == null ? feed : feed.where((e) => e.tasting.tastedAt.isAfter(since)),
   );
 });
-
-final class LastSaved extends Notifier<TastingId?> {
-  @override
-  TastingId? build() => null;
-
-  void mark(TastingId? id) => state = id;
-}
-
-final lastSavedProvider = NotifierProvider<LastSaved, TastingId?>(
-  LastSaved.new,
-);

@@ -81,7 +81,7 @@ Deviations found while building, each with its reason. Where an entry here disag
   - After a failed online search the Search online button stays enabled for a retry; after hits it is disabled until the query changes.
   - Export journal writes the `.cork` zip (with photos); "Export without photos" writes the plain JSON. Theme is a segmented button.
   - The picker's category tabs are pages: tapping a wheel wedge switches the page rather than scrolling one long list.
-  - Stats opens on All time and has an empty-range message. The glasses strip uses 28dp swipes and skips tastings with no colour. Locked-badge progress bars are chalk grey, not yellow, per the One Job Rule.
+  - Stats opens on All time and has an empty-range message. The glasses strip uses 20dp swatches (chalk swipes were dropped as unreadable at row size) and skips tastings with no colour. Locked-badge progress bars are chalk grey, not yellow, per the One Job Rule.
   - The feed hides its FAB on the empty board (the filled button is the one action). Wine detail's FAB reads "Log a glass" until the wine has a tasting. Long-press opens a bottom sheet with Edit and Delete. Filters apply live in their sheet.
   - Pushed routes use `corkRoute`, which cuts instantly under Remove animations, because the predictive-back transition ignores that setting.
   - Not built: the tablet two-pane layouts for the tasting form and wine detail. The navigation rail on expanded widths is built.

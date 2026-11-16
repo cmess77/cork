@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
-import '../../domain/ids.dart';
 import '../../domain/journal.dart';
 import '../../domain/tasting.dart';
 import '../format.dart';
@@ -59,7 +58,6 @@ class TastingRow extends ConsumerWidget {
     final (:tasting, :wine) = entry;
     final text = Theme.of(context).textTheme;
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
-    final TastingId? lastSaved = ref.watch(lastSavedProvider);
     final title = datedTitle
         ? [
             fullDate(tasting.tastedAt),
@@ -95,12 +93,6 @@ class TastingRow extends ConsumerWidget {
                       style: text.titleMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    ChalkSwipe(
-                      color: tasting.color,
-                      seed: tasting.id.value,
-                      drawIn: lastSaved == tasting.id,
                     ),
                     const SizedBox(height: CorkSpace.xs),
                     if (line2.isNotEmpty)

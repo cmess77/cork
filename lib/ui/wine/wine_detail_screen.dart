@@ -339,8 +339,7 @@ class _Verdict extends StatelessWidget {
                 spacing: CorkSpace.sm,
                 runSpacing: CorkSpace.sm,
                 children: [
-                  for (final t in coloured)
-                    ChalkSwipe(color: t.color, seed: t.id.value),
+                  for (final t in coloured) GlassSwatch(t.color, size: 24),
                 ],
               ),
             ),

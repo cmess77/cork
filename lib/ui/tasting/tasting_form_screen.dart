@@ -275,7 +275,6 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
           AdoptWine(_draft.wine),
           SaveTasting(tasting, removeFromWishlist: remove),
         ]);
-        ref.read(lastSavedProvider.notifier).mark(tasting.id);
         final earned = newlyEarned(before, after);
         final messenger = ScaffoldMessenger.of(context);
         Navigator.pop(context, true);

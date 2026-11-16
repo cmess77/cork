@@ -147,7 +147,7 @@ Source of truth for code: `lib/ui/theme/cork_theme.dart` (ThemeData, `CorkTokens
 
 **Creative North Star: "The Tasting-Room Slate"**
 
-Cork looks like the board a cellar door chalks its pours on. A blue-green slate carries everything; text is chalk; scores are chalked in yellow the way a board prices a glass; and each tasting leaves a dry-brush swipe of its actual glass colour, so a scroll through the journal reads as a history of colour before it reads as words. It is a working Android app first: Material 3 structure, navigation, and controls, with the world entering only through palette, type, density, and that one signature move.
+Cork looks like the board a cellar door chalks its pours on. A blue-green slate carries everything; text is chalk; scores are chalked in yellow the way a board prices a glass; and each tasting shows a swatch of its actual glass colour. It is a working Android app first: Material 3 structure, navigation, and controls, with the world entering only through palette, type, density, and density.
 
 Density is medium-high, like a by-the-glass list: rows are compact, figures are tabular and right-aligned, and nothing is decorated. The slate shell (app bar and navigation bar) stays slate in light theme too, so the app keeps its identity in daylight; only the content ground whitewashes.
 
@@ -156,7 +156,7 @@ The rejected defaults are the category's: burgundy, gold foil, and cream paper w
 **Key Characteristics:**
 - Slate ground on an eleven-step ramp; tonal depth only.
 - Chalk yellow means "your score" or "the main action", nothing else.
-- Every tasting carries a chalk swipe in its WSET glass colour.
+- Every tasting shows its WSET glass colour as a swatch.
 - Condensed caps for board headings; humanist sans for reading.
 - Stock Material 3 components, themed, never re-invented.
 
@@ -188,7 +188,7 @@ Glass colours live in `glass_colors.dart`: 17 hues (whites: water-white, green-y
 
 **The Wine Is Data Rule.** Glass colours appear only where they describe a real tasting or a choice in the picker. They never tint chrome, headers, or empty states.
 
-**The Tablecloth Rule.** A glass colour is always drawn on tablecloth white or as a swipe on slate, never as a fill behind text.
+**The Tablecloth Rule.** A glass colour is always drawn on tablecloth white, never as a fill behind text.
 
 ## Typography
 
@@ -228,18 +228,15 @@ Tonal layering only. Depth is a step along the slate ramp: board (`slate-2`), ca
 
 ## Shapes
 
-Squarer than stock Material 3, like a wooden-framed board. Cards, chips, fields, and thumbnails 8dp; search bar 12dp; FAB and bottom-sheet top corners 16dp; dialogs 20dp. Buttons keep Material's stadium shape and the navigation indicator stays a pill. Glass swatches are circles. The chalk swipe is the only irregular edge in the system.
+Squarer than stock Material 3, like a wooden-framed board. Cards, chips, fields, and thumbnails 8dp; search bar 12dp; FAB and bottom-sheet top corners 16dp; dialogs 20dp. Buttons keep Material's stadium shape and the navigation indicator stays a pill. Glass swatches are circles.
 
 ## Motion
 
 Material 3 tokens in `CorkMotion`: 150ms short, 300ms medium, 500ms long; standard easing `Cubic(0.2, 0, 0, 1)`, emphasized decelerate `Cubic(0.05, 0.7, 0.1, 1)`, emphasized accelerate `Cubic(0.3, 0, 0.8, 0.15)`. Page transitions use the predictive-back builder. Search result to wine detail uses a container transform; navigation destinations fade through.
 
-The one authored moment: when a tasting is saved, its chalk swipe draws left to right in 350ms with emphasized decelerate on the row it lands in. With Remove animations on (`MediaQuery.disableAnimationsOf`), every transition is an instant cut and the swipe appears complete.
+With Remove animations on (`MediaQuery.disableAnimationsOf`), every transition is an instant cut.
 
 ## Components
-
-### Chalk swipe (signature)
-A dry-brush stroke 56 by 6dp drawn under a wine name in the tasting's glass colour, left-aligned with the text. Painted with a `CustomPainter`: a band with a ragged, partly transparent leading and trailing edge and two or three thin gaps along its length, seeded from the tasting id so it is stable across rebuilds. On light theme it draws on whitewash with a 1dp `slate-8` underlay for pale whites so water-white stays visible. Used in feed rows, wine detail history, and the stats "glasses" strip. Never animated except on save.
 
 ### Glass swatch
 A 48dp circle of tablecloth white with a 36dp inner disc of the glass colour and a 1dp `slate-8` hairline so water-white reads. Selected: 3dp chalk-yellow ring outside the tablecloth and the hue name in label-medium below. Every swatch carries its WSET name; colour is never the only signal.
@@ -274,14 +271,14 @@ A 48dp circle of tablecloth white with a 36dp inner disc of the glass colour and
 
 ### Navigation
 - **Navigation bar:** `slate-3` in both themes, 72dp, chalk-grey icons and labels, selected destination in a `chalk-yellow-container` pill with on-container icon.
-- **Top app bar:** `slate-3`, chalk-white headline-small title, light status icons. Large top app bar on Wine detail and Stats, collapsing on scroll.
+- **Top app bar:** `slate-3`, chalk-white headline-small title, light status icons. Large top app bar on Wine detail only, collapsing on scroll. Every top-level tab uses the standard bar.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** take every colour from `Theme.of(context).colorScheme` or `Theme.of(context).cork`; never hard-code hex in widgets.
 - **Do** right-align scores in the Score style and chalk yellow.
-- **Do** draw glass colour only through `glassDisplayColor` on tablecloth or as a chalk swipe.
+- **Do** draw glass colour only through `glassDisplayColor` on tablecloth.
 - **Do** keep the shell slate in light theme.
 - **Do** honor Remove animations with instant cuts.
 
@@ -290,7 +287,7 @@ A 48dp circle of tablecloth white with a 36dp inner disc of the glass colour and
 - **Don't** tint surfaces with primary (`surfaceTint` stays transparent).
 - **Don't** use chalk yellow for anything other than scores and the primary action.
 - **Don't** put glass colour behind text or use it in chrome.
-- **Don't** set wine names in caps or use handwriting fonts; the chalk is in the swipe, not the type.
+- **Don't** set wine names in caps or use handwriting fonts.
 - **Don't** use emoji or unicode glyphs for icons; use Material Symbols (rounded, weight 400).
 - **Don't** stack FABs or put a FAB on the tasting form.
 
@@ -302,7 +299,7 @@ Every screen uses the shell (slate app bar, slate navigation bar on top-level de
 - **App bar:** title "Cork"; actions Search (opens an in-bar search field that filters the feed by wine, winery, grape, region, where, notes) and Filter (opens a bottom sheet).
 - **Filter chips row** under the bar when any filter is active: type, score range, date range, country. Each chip removable; "Clear" text button at the end.
 - **Summary line** above the list, body-medium chalk grey: "128 tastings · 97 wines · avg 3.8". One line, not tiles.
-- **List:** grouped by month, sticky board heading ("NOVEMBER 2026"). Row (88dp): leading 56dp label photo (8dp corners) or, without a photo, a 56dp glass swatch; title-medium wine name, chalk swipe below it, body-medium "Winery · 2019" (or "NV"), body-small "Nov 12 · Bar Brutal"; trailing score in Score style. Tap opens the tasting on Wine detail; long-press opens Edit / Delete.
+- **List:** grouped by month, sticky board heading ("NOVEMBER 2026"). Row (88dp): leading 56dp label photo (8dp corners) or, without a photo, a 56dp glass swatch; title-medium wine name, body-medium "Winery · 2019" (or "NV"), body-small "Nov 12 · Bar Brutal"; trailing score in Score style. Tap opens the tasting on Wine detail; long-press opens Edit / Delete.
 - **FAB:** extended "Log a glass", collapses to icon on scroll down.
 - **Empty:** centered board heading "NOTHING ON THE BOARD YET", body "Log the first glass you taste and it shows up here.", filled button "Log a glass".
 - **Filtered empty:** "No tastings match these filters." with a "Clear filters" text button.
@@ -327,20 +324,20 @@ Full-screen route, app bar title "New tasting" or "Edit tasting", close icon lea
 - **NOTES:** selected descriptor chips (removable) and an "Add descriptors" tonal button opening the descriptor picker; then a multiline "Notes" field.
 - **DESCRIPTOR PICKER (bottom sheet, expands to full height):** top half shows the aroma wheel, a sunburst of three rings (category, subcategory, descriptor) in the eight aroma category colours on slate. It is a reference: it highlights the current category and every selected descriptor, and tapping a category segment scrolls the list to it, but picking happens below. Bottom half: category tabs (Fruit, Floral, Herbal, Spice, Earth, Oak, Yeast, Oxidative), subcategory board headings, descriptor filter chips. A search field filters descriptors by name. "Done" filled button.
 - **CONTEXT:** Date and time (defaults to now; date and time pickers), Where (free text with suggestions from past entries), Price (number field with currency dropdown, default from Settings), Label photo (tile with "Take photo" and "Choose from gallery"; thumbnail with remove once set).
-- **On save:** returns to Journal or Wine detail, the new row's chalk swipe draws in, snackbar "Tasting saved" (and "Removed from wishlist" if applicable, with Undo).
+- **On save:** returns to Journal or Wine detail, snackbar "Tasting saved" (and "Removed from wishlist" if applicable, with Undo).
 - **Edit:** same form, prefilled; overflow menu "Delete tasting" opens a Material dialog "Delete this tasting? Stats and badges will update." with Cancel and Delete.
 - **Discard guard:** Back with unsaved changes opens "Discard this tasting?" dialog.
 
 ### 4. Wine detail
 - **Large app bar:** wine name (headline), "Winery" below, collapsing; actions: wishlist bookmark, overflow (Edit wine).
 - **Facts:** two-column key/value grid in body-medium: Type, Grapes, Region, Country, ABV, Source ("X-Wines", "Open Food Facts", or "Added by you").
-- **Your verdict:** average score in Display chalk yellow with "from 3 tastings" below; a row of chalk swipes, one per tasting in date order, showing how the glass looked each time.
+- **Your verdict:** average score in Display chalk yellow with "from 3 tastings" below; a row of small glass swatches, one per tasting in date order, showing how the glass looked each time.
 - **Tastings:** list of this wine's tastings, newest first, row as in the feed but led by date and vintage; tap to expand inline (expand-in-place keeps notes, descriptors, structure, where, price, photo) with Edit action.
 - **FAB:** extended "Log again".
 
 ### 5. Stats
 - **Range:** segmented button at top: 30 days, 12 months, All time.
-- **Summary card:** "Average 3.8 · 128 tastings · 97 wines", plus the "glasses" strip: every tasting's chalk swipe in date order, wrapping, so the period reads as colour.
+- **Summary card:** "Average 3.8 · 128 tastings · 97 wines", plus the "glasses" strip: every tasting's glass swatch in date order, wrapping, so the period reads as colour.
 - **AVERAGE OVER TIME:** line chart, monthly mean score with dots sized by tasting count, y-axis 1 to 5, chalk yellow line, chalk grey axes in label-small tabular figures. Fewer than 3 months: "Log a few more months to see a trend."
 - **BREAKDOWN:** segmented or scrollable chips for Type, Grape, Country, Region, Winery, Vintage, Price; below, a sortable list (Count, Average) where each row is name, a thin horizontal bar of count in the series colour (type uses wine-type series, others chalk blue), count, and average in Score style. Price bands default to Under 15, 15 to 30, 30 to 60, 60 plus in the default currency (bands are open in PRODUCT.md).
 - **DISTRIBUTIONS:** score histogram in 0.5 bins as a dot plot with diameters from the fixed score-dot ramp (6, 9, 12, 16, 22dp); sweetness as six stacked bars labelled with the WSET terms.

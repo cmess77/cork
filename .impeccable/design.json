@@ -23,9 +23,8 @@
       { "name": "short", "value": "150ms", "purpose": "Chip and toggle state changes." },
       { "name": "medium", "value": "300ms", "purpose": "Container transforms, fade-through between destinations." },
       { "name": "long", "value": "500ms", "purpose": "Large sheet expansion." },
-      { "name": "swipe", "value": "350ms emphasized-decelerate", "purpose": "Chalk swipe draws in once on save." },
       { "name": "ease-standard", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Default easing." },
-      { "name": "ease-emphasized-decelerate", "value": "cubic-bezier(0.05, 0.7, 0.1, 1)", "purpose": "Entering elements and the chalk swipe." }
+      { "name": "ease-emphasized-decelerate", "value": "cubic-bezier(0.05, 0.7, 0.1, 1)", "purpose": "Entering elements." }
     ],
     "breakpoints": [
       { "name": "compact", "value": "0-599dp" },
@@ -51,10 +50,10 @@
       "css": ".ds-nav { display: flex; background: #21282C; height: 72px; align-items: center; justify-content: space-around; } .ds-nav-i { color: #A9B3B7; font: 600 12px/16px 'Sofia Sans', sans-serif; padding: 6px 16px; border-radius: 999px; } .ds-nav-i.on { background: #4A3D10; color: #F7E3A6; } .ds-nav-i:hover { color: #ECE9E1; }"
     },
     {
-      "name": "Tasting row with chalk swipe",
+      "name": "Tasting row",
       "kind": "custom",
       "refersTo": "score-numeral",
-      "description": "Feed row: wine name, chalk swipe in glass colour, winery and vintage, right-aligned score.",
+      "description": "Feed row: wine name, winery and vintage, right-aligned score.",
       "html": "<div class=\"ds-row\"><div class=\"ds-sw\"><span></span></div><div class=\"ds-txt\"><div class=\"ds-name\">Barolo Bussia</div><div class=\"ds-chalk\"></div><div class=\"ds-sub\">Prunotto · 2016</div></div><div class=\"ds-score\">4.3</div></div>",
       "css": ".ds-row { display: flex; align-items: center; gap: 16px; background: #1B2124; padding: 12px 16px; } .ds-sw { width: 48px; height: 48px; border-radius: 50%; background: #F7F6F1; display: grid; place-items: center; } .ds-sw span { width: 36px; height: 36px; border-radius: 50%; background: #7A2B25; } .ds-txt { flex: 1; } .ds-name { color: #ECE9E1; font: 600 16px/24px 'Sofia Sans Condensed', sans-serif; } .ds-chalk { width: 56px; height: 6px; margin: 2px 0 4px; background: #7A2B25; border-radius: 3px 1px 4px 1px; opacity: 0.9; } .ds-sub { color: #A9B3B7; font: 400 14px/20px 'Sofia Sans', sans-serif; } .ds-score { color: #EBCB6B; font: 700 28px/32px 'Sofia Sans Extra Condensed', sans-serif; font-variant-numeric: tabular-nums; } .ds-row:hover { background: #21282C; }"
     },
@@ -85,18 +84,18 @@
   ],
   "narrative": {
     "northStar": "The Tasting-Room Slate",
-    "overview": "Cork looks like the board a cellar door chalks its pours on. A blue-green slate carries everything; text is chalk; scores are chalked in yellow the way a board prices a glass; and each tasting leaves a dry-brush swipe of its actual glass colour. It is a working Android app first: Material 3 structure, navigation, and controls, with the world entering only through palette, type, density, and that one signature move.",
+    "overview": "Cork looks like the board a cellar door chalks its pours on. A blue-green slate carries everything; text is chalk; scores are chalked in yellow the way a board prices a glass; and each tasting shows a swatch of its actual glass colour. It is a working Android app first: Material 3 structure, navigation, and controls, with the world entering only through palette, type, density, and density.",
     "keyCharacteristics": [
       "Slate ground on an eleven-step ramp; tonal depth only.",
       "Chalk yellow means \"your score\" or \"the main action\", nothing else.",
-      "Every tasting carries a chalk swipe in its WSET glass colour.",
+      "Every tasting shows its WSET glass colour as a swatch.",
       "Condensed caps for board headings; humanist sans for reading.",
       "Stock Material 3 components, themed, never re-invented."
     ],
     "rules": [
       { "name": "The One Job Rule", "body": "Each chalk colour owns one meaning. Yellow is score and primary action; blue is selection; pink is wishlist.", "section": "colors" },
       { "name": "The Wine Is Data Rule", "body": "Glass colours appear only where they describe a real tasting or a choice in the picker.", "section": "colors" },
-      { "name": "The Tablecloth Rule", "body": "A glass colour is always drawn on tablecloth white or as a swipe on slate, never as a fill behind text.", "section": "colors" },
+      { "name": "The Tablecloth Rule", "body": "A glass colour is always drawn on tablecloth white, never as a fill behind text.", "section": "colors" },
       { "name": "The Right-Hand Figure Rule", "body": "Scores, counts, and prices sit right-aligned in tabular figures tight to the gutter.", "section": "typography" },
       { "name": "The Caps Belong to the Board Rule", "body": "Only board headings are set in caps.", "section": "typography" },
       { "name": "The One Step Rule", "body": "A child surface sits exactly one ramp step from its parent.", "section": "elevation" }
@@ -104,7 +103,7 @@
     "dos": [
       "Do take every colour from Theme.of(context).colorScheme or Theme.of(context).cork; never hard-code hex in widgets.",
       "Do right-align scores in the Score style and chalk yellow.",
-      "Do draw glass colour only through glassDisplayColor on tablecloth or as a chalk swipe.",
+      "Do draw glass colour only through glassDisplayColor on tablecloth.",
       "Do keep the shell slate in light theme.",
       "Do honor Remove animations with instant cuts."
     ],
@@ -113,7 +112,7 @@
       "Don't tint surfaces with primary (surfaceTint stays transparent).",
       "Don't use chalk yellow for anything other than scores and the primary action.",
       "Don't put glass colour behind text or use it in chrome.",
-      "Don't set wine names in caps or use handwriting fonts; the chalk is in the swipe, not the type.",
+      "Don't set wine names in caps or use handwriting fonts.",
       "Don't use emoji or unicode glyphs for icons; use Material Symbols (rounded, weight 400).",
       "Don't stack FABs or put a FAB on the tasting form."
     ]
