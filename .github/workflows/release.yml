@@ -50,4 +50,4 @@ jobs:
           flags=()
           case "$version" in *-*) flags+=(--prerelease) ;; esac
           gh release create "$GITHUB_REF_NAME" "dist/cork-$version.apk" \
-            --title "Cork $version" --generate-notes --verify-tag "${flags[@]}"
+            --title "Cork $version" --notes-file dist/notes.md --verify-tag "${flags[@]}"

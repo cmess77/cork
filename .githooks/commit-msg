@@ -1,0 +1,4 @@
+#!/bin/sh
+# Rejects commit messages that are not Conventional Commits.
+# Enable once per clone: git config core.hooksPath .githooks
+exec dart tool/release.dart check-message "$1"

@@ -18,6 +18,14 @@ version="${tag#v}"
 # Commit count is identical on both forges, so versionCode always matches.
 build_number="$(git rev-list --count HEAD)"
 
+# Tags come from `dart tool/release.dart cut`, which sets the pubspec version
+# and the changelog in the tagged commit. A hand-made tag fails here.
+pubspec_version="$(sed -nE 's/^version: ([^+]*).*/\1/p' pubspec.yaml)"
+if [ "$pubspec_version" != "$version" ]; then
+  echo "tag $tag but pubspec.yaml says $pubspec_version; cut releases with dart tool/release.dart cut" >&2
+  exit 1
+fi
+
 for name in CORK_KEYSTORE_BASE64 CORK_KEYSTORE_PASSWORD; do
   if [ -z "${!name:-}" ]; then
     echo "missing secret $name" >&2
@@ -49,4 +57,5 @@ flutter build apk --release \
 
 mkdir -p dist
 cp build/app/outputs/flutter-apk/app-release.apk "dist/cork-$version.apk"
+dart tool/release.dart notes "$version" > dist/notes.md
 echo "Built dist/cork-$version.apk (versionCode $build_number)"

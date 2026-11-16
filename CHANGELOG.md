@@ -1,0 +1,17 @@
+# Changelog
+
+Cork follows [Semantic Versioning](https://semver.org). Each section is
+written by `dart tool/release.dart cut` from the
+[Conventional Commits](https://www.conventionalcommits.org) since the last
+release.
+
+## 0.5.0 (2026-11-16)
+
+First signed release.
+
+### Features
+
+- Journal of tastings with wine search, manual entry, and the tasting form
+- Feed sorting by date, rating, name, or any stats dimension
+- Wine detail, Wishlist, Stats, Badges, and Settings screens
+- Offline wine search over a bundled index
