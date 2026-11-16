@@ -143,16 +143,26 @@ class ChalkSwipe extends StatefulWidget {
 
 class _ChalkSwipeState extends State<ChalkSwipe>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _progress = AnimationController(
-    vsync: this,
-    duration: CorkMotion.swipe,
-    value: 1,
-  );
+  late final AnimationController _progress;
+  var _drawn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress = AnimationController(
+      vsync: this,
+      duration: CorkMotion.swipe,
+      value: 1,
+    );
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (widget.drawIn && !MediaQuery.disableAnimationsOf(context)) {
+    if (widget.drawIn &&
+        !_drawn &&
+        !MediaQuery.disableAnimationsOf(context)) {
+      _drawn = true;
       _progress.value = 0;
       _progress.animateTo(1, curve: CorkMotion.emphasizedDecelerate);
     }
