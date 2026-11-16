@@ -95,7 +95,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       case ImportRejected(:final problem):
         if (mounted) _say(problem.message);
       case ImportReady(:final incoming):
-        if (!mounted || !await _confirmReplace()) return;
+        if (!mounted) return;
+        // Nothing is running while the owner decides.
+        setState(() => _busy = false);
+        if (!await _confirmReplace() || !mounted) return;
+        setState(() => _busy = true);
         await backup.restore(incoming);
         final n = incoming.journal.tastings.length;
         if (mounted) _say('Imported ${countLabel(n, 'tasting')}');

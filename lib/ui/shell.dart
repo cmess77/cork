@@ -66,13 +66,19 @@ class _ShellState extends State<Shell> {
       index: _index,
       children: [
         for (final (i, d) in _destinations.indexed)
-          TickerMode(enabled: i == _index, child: d.screen),
+          // Every destination's Scaffold shows each snackbar, and a snackbar
+          // carries a Hero, so only the visible one may take part in heroes.
+          HeroMode(
+            enabled: i == _index,
+            child: TickerMode(enabled: i == _index, child: d.screen),
+          ),
       ],
     );
     final wide = MediaQuery.sizeOf(context).width >= 840;
     if (wide) {
-      return Scaffold(
-        body: Row(
+      return Material(
+        color: cork.shell,
+        child: Row(
           children: [
             NavigationRail(
               backgroundColor: cork.shell,
@@ -102,18 +108,31 @@ class _ShellState extends State<Shell> {
         ),
       );
     }
-    return Scaffold(
-      body: body,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          for (final d in _destinations)
-            NavigationDestination(
-              icon: Icon(d.icon),
-              selectedIcon: Icon(d.selectedIcon),
-              label: d.label,
+    // Not a Scaffold: each destination's own Scaffold must be a root of the
+    // ScaffoldMessenger, so snackbars lift its FAB instead of covering it.
+    return Material(
+      color: cork.shell,
+      child: Column(
+        children: [
+          Expanded(
+            child: MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              child: body,
             ),
+          ),
+          NavigationBar(
+            selectedIndex: _index,
+            onDestinationSelected: (i) => setState(() => _index = i),
+            destinations: [
+              for (final d in _destinations)
+                NavigationDestination(
+                  icon: Icon(d.icon),
+                  selectedIcon: Icon(d.selectedIcon),
+                  label: d.label,
+                ),
+            ],
+          ),
         ],
       ),
     );

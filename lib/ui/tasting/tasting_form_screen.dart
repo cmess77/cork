@@ -142,7 +142,12 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(content: Text(message)));
 
+  /// A modal that pops hands focus back to the last field, which reopens the
+  /// keyboard and scrolls the form away from what the user just picked.
+  void _dropFocus() => FocusManager.instance.primaryFocus?.unfocus();
+
   Future<void> _changeWine() async {
+    _dropFocus();
     final picked = await pickWine(context);
     if (picked == null || !mounted) return;
     _edit(() {
@@ -168,6 +173,7 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
   });
 
   Future<void> _pickDate() async {
+    _dropFocus();
     final at = _draft.tastedAt;
     final now = DateTime.now();
     final day = await showDatePicker(
@@ -189,6 +195,7 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
   }
 
   Future<void> _pickTime() async {
+    _dropFocus();
     final at = _draft.tastedAt;
     final time = await showTimePicker(
       context: context,
@@ -207,6 +214,7 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
   }
 
   Future<void> _addDescriptors() async {
+    _dropFocus();
     final picked = await showDescriptorPicker(
       context,
       selected: _draft.descriptors,
@@ -220,6 +228,7 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
   Future<void> _addPhoto(ImageSource source) async {
     final picker = LabelPhotoPickerScope.of(context);
     final photos = ref.read(photoStoreProvider);
+    _dropFocus();
     setState(() => _photoBusy = true);
     try {
       final bytes = await picker.pick(source);

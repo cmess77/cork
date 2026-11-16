@@ -136,6 +136,11 @@ void main() {
     );
     expect(find.text('Replace your journal with this backup?'), findsOneWidget);
     expect(
+      find.byType(LinearProgressIndicator),
+      findsNothing,
+      reason: 'nothing runs while the owner decides',
+    );
+    expect(
       find.text('Your current 1 tasting will be replaced.'),
       findsOneWidget,
     );

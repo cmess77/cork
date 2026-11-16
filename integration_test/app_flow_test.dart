@@ -228,22 +228,26 @@ void main() {
     expect(within<BadgesScreen>(find.textContaining('Earned ')), findsWidgets);
 
     await go(tester, 'Journal');
-    await openRowMenu(tester, name);
-    await tester.tap(find.text('Edit'));
+    await tester.tap(within<FeedScreen>(find.text(name)));
     await tester.pumpAndSettle();
+    await tapVisible(tester, find.text('Edit').last);
     expect(find.text('Edit tasting'), findsOneWidget);
     await tapVisible(tester, find.byTooltip('Raise score by 0.1'));
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
     expect(app.store.journal.feed.single.tasting.score.format(), '3.3');
 
-    await openRowMenu(tester, name);
-    await tester.tap(find.text('Delete'));
+    await tapVisible(tester, find.text('Edit').last);
+    await tester.tap(find.byTooltip('More'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete tasting'));
     await tester.pumpAndSettle();
     expect(find.text('Delete this tasting?'), findsOneWidget);
     await tester.tap(find.widgetWithText(TextButton, 'Delete'));
     await tester.pumpAndSettle();
     expect(app.store.journal.tastings, isEmpty);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
     expect(within<FeedScreen>(find.text('NOTHING ON THE BOARD YET')), findsOne);
 
     await go(tester, 'Badges');
