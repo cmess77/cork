@@ -3,7 +3,7 @@
 # .github/workflows/release.yml publishes the same APK there.
 #
 # Repository secrets (Settings > Actions > Secrets): CORK_KEYSTORE_BASE64,
-# CORK_KEYSTORE_PASSWORD, CORK_KEY_ALIAS, CORK_KEY_PASSWORD.
+# CORK_KEYSTORE_PASSWORD.
 
 name: Release
 
@@ -42,8 +42,6 @@ jobs:
         env:
           CORK_KEYSTORE_BASE64: ${{ secrets.CORK_KEYSTORE_BASE64 }}
           CORK_KEYSTORE_PASSWORD: ${{ secrets.CORK_KEYSTORE_PASSWORD }}
-          CORK_KEY_ALIAS: ${{ secrets.CORK_KEY_ALIAS }}
-          CORK_KEY_PASSWORD: ${{ secrets.CORK_KEY_PASSWORD }}
         run: bash tool/ci/build_release_apk.sh
 
       - name: Publish Forgejo release
