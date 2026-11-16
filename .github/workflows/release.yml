@@ -1,0 +1,55 @@
+# Publishes a signed APK as a GitHub release when a vX.Y.Z tag arrives.
+# Tags reach GitHub through Forgejo's push mirror; Forgejo is the primary
+# home (git.bigpapa.one/cmess/cork) and runs CI there.
+#
+# Repository secrets (Settings > Secrets and variables > Actions):
+# CORK_KEYSTORE_BASE64, CORK_KEYSTORE_PASSWORD, CORK_KEY_ALIAS,
+# CORK_KEY_PASSWORD.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.6
+          channel: stable
+
+      - name: Build signed APK
+        env:
+          CORK_KEYSTORE_BASE64: ${{ secrets.CORK_KEYSTORE_BASE64 }}
+          CORK_KEYSTORE_PASSWORD: ${{ secrets.CORK_KEYSTORE_PASSWORD }}
+          CORK_KEY_ALIAS: ${{ secrets.CORK_KEY_ALIAS }}
+          CORK_KEY_PASSWORD: ${{ secrets.CORK_KEY_PASSWORD }}
+        run: bash tool/ci/build_release_apk.sh
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          flags=()
+          case "$version" in *-*) flags+=(--prerelease) ;; esac
+          gh release create "$GITHUB_REF_NAME" "dist/cork-$version.apk" \
+            --title "Cork $version" --generate-notes --verify-tag "${flags[@]}"

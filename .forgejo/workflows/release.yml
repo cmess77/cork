@@ -1,0 +1,69 @@
+# Push a vX.Y.Z tag on main to publish a signed APK as a Forgejo release.
+# The push mirror carries the same tag to GitHub, where
+# .github/workflows/release.yml publishes the same APK there.
+#
+# Repository secrets (Settings > Actions > Secrets): CORK_KEYSTORE_BASE64,
+# CORK_KEYSTORE_PASSWORD, CORK_KEY_ALIAS, CORK_KEY_PASSWORD.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+env:
+  FLUTTER_VERSION: 3.44.6
+
+jobs:
+  release:
+    runs-on: default
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK and Flutter
+        run: bash tool/ci/setup_toolchain.sh
+
+      - name: Analyze and test
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+
+      - name: Build signed APK
+        env:
+          CORK_KEYSTORE_BASE64: ${{ secrets.CORK_KEYSTORE_BASE64 }}
+          CORK_KEYSTORE_PASSWORD: ${{ secrets.CORK_KEYSTORE_PASSWORD }}
+          CORK_KEY_ALIAS: ${{ secrets.CORK_KEY_ALIAS }}
+          CORK_KEY_PASSWORD: ${{ secrets.CORK_KEY_PASSWORD }}
+        run: bash tool/ci/build_release_apk.sh
+
+      - name: Publish Forgejo release
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          version="${tag#v}"
+          apk="dist/cork-$version.apk"
+          prerelease=false
+          case "$version" in *-*) prerelease=true ;; esac
+          api="$GITHUB_SERVER_URL/api/v1/repos/$GITHUB_REPOSITORY"
+          body="Signed APK for Cork $version, built from $(git rev-parse --short HEAD)."
+          release_id="$(curl -fsS -X POST "$api/releases" \
+            -H "Authorization: token $TOKEN" \
+            -H 'Content-Type: application/json' \
+            -d "{\"tag_name\":\"$tag\",\"name\":\"Cork $version\",\"body\":\"$body\",\"prerelease\":$prerelease}" \
+            | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
+          curl -fsS -X POST "$api/releases/$release_id/assets?name=cork-$version.apk" \
+            -H "Authorization: token $TOKEN" \
+            -F "attachment=@$apk" > /dev/null
+          echo "Published $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag"

@@ -1,10 +1,7 @@
-# Analyze, test, and build an installable APK on every push and PR to main.
+# Analyze and test every push and PR to main. Installable APKs come from
+# release.yml, which runs when a vX.Y.Z tag is pushed.
 #
 # `runs-on: default` matches the registered Forgejo runner label.
-# Flutter is cloned at the pinned version instead of using subosito/flutter-action,
-# and the Android SDK comes from the official command-line tools, because this
-# runner cannot resolve android-actions/setup-android. Gradle installs the
-# platform, build tools, and NDK the project asks for once licenses are accepted.
 
 name: CI
 
@@ -19,7 +16,7 @@ env:
   FLUTTER_VERSION: 3.44.6
 
 jobs:
-  build:
+  check:
     runs-on: default
     steps:
       - name: Checkout
@@ -31,39 +28,8 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Android SDK
-        run: |
-          set -euo pipefail
-          sdk="$HOME/android-sdk"
-          if [ ! -x "$sdk/cmdline-tools/latest/bin/sdkmanager" ]; then
-            mkdir -p "$sdk/cmdline-tools"
-            curl -fsSL -o "$sdk/cmdline-tools.zip" \
-              https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-            unzip -q -o "$sdk/cmdline-tools.zip" -d "$sdk/cmdline-tools"
-            rm -rf "$sdk/cmdline-tools/latest"
-            mv "$sdk/cmdline-tools/cmdline-tools" "$sdk/cmdline-tools/latest"
-          fi
-          set +o pipefail
-          yes | "$sdk/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
-          set -o pipefail
-          {
-            echo "ANDROID_HOME=$sdk"
-            echo "ANDROID_SDK_ROOT=$sdk"
-          } >> "${FORGEJO_ENV:-${GITHUB_ENV:-}}"
-          {
-            echo "$sdk/cmdline-tools/latest/bin"
-            echo "$sdk/platform-tools"
-          } >> "${FORGEJO_PATH:-${GITHUB_PATH:-}}"
-
-      - name: Set up Flutter
-        run: |
-          set -euo pipefail
-          dir="$HOME/flutter-$FLUTTER_VERSION"
-          if [ ! -x "$dir/bin/flutter" ]; then
-            git clone --depth 1 --branch "$FLUTTER_VERSION" \
-              https://github.com/flutter/flutter.git "$dir"
-          fi
-          echo "$dir/bin" >> "${FORGEJO_PATH:-${GITHUB_PATH:-}}"
+      - name: Set up Android SDK and Flutter
+        run: bash tool/ci/setup_toolchain.sh
 
       - name: Install dependencies
         run: |
@@ -76,12 +42,3 @@ jobs:
 
       - name: Test
         run: flutter test
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: cork-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
