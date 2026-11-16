@@ -26,14 +26,15 @@ void main() {
   });
 
   List<int> ids(String match) => [
-        for (final r in db.select(
-          'SELECT rowid FROM wines_fts WHERE wines_fts MATCH ? ORDER BY rowid',
-          [match],
-        ))
-          r['rowid'] as int,
-      ];
+    for (final r in db.select(
+      'SELECT rowid FROM wines_fts WHERE wines_fts MATCH ? ORDER BY rowid',
+      [match],
+    ))
+      r['rowid'] as int,
+  ];
 
-  Row wine(int id) => db.select('SELECT * FROM wines WHERE id = ?', [id]).single;
+  Row wine(int id) =>
+      db.select('SELECT * FROM wines WHERE id = ?', [id]).single;
 
   List<String> grapes(int id) =>
       (jsonDecode(wine(id)['grapes'] as String) as List).cast<String>();
@@ -82,10 +83,13 @@ void main() {
 
   group('parseLiteralList', () {
     test('handles quotes, apostrophes and bare tokens', () {
-      expect(
-        parseLiteralList('''['A', "B's", 3, 'N.V.', None]'''),
-        ['A', "B's", 3, 'N.V.', null],
-      );
+      expect(parseLiteralList('''['A', "B's", 3, 'N.V.', None]'''), [
+        'A',
+        "B's",
+        3,
+        'N.V.',
+        null,
+      ]);
     });
 
     test('empty list', () => expect(parseLiteralList('[]'), isEmpty));

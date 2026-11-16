@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../domain/glass_color.dart';
 import 'glass_colors.dart';
 
 /// The bundled Sofia Sans superfamily. The files are variable fonts, so each
