@@ -29,6 +29,7 @@ typedef _Refinement = ({String label, FeedFilter without});
 
 class _FeedScreenState extends ConsumerState<FeedScreen> {
   late var _filter = widget.initialFilter;
+  FeedSort _sort = FeedSort.newest;
   late var _searching = widget.initialFilter.text.isNotEmpty;
   late final _query = TextEditingController(text: widget.initialFilter.text);
   var _fabExtended = true;
@@ -179,15 +180,19 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 )
               else ...[
                 SliverToBoxAdapter(child: _Summary(entries)),
-                for (final (month, group) in byMonth(entries))
+                for (final (:heading, entries: group) in sectionFeed(
+                  entries,
+                  _sort,
+                ))
                   SliverMainAxisGroup(
                     slivers: [
-                      PinnedHeaderSliver(
-                        child: ColoredBox(
-                          color: Theme.of(context).colorScheme.surface,
-                          child: BoardHeading(monthHeading(month)),
+                      if (heading != null)
+                        PinnedHeaderSliver(
+                          child: ColoredBox(
+                            color: Theme.of(context).colorScheme.surface,
+                            child: BoardHeading(heading),
+                          ),
                         ),
-                      ),
                       SliverList.builder(
                         itemCount: group.length,
                         itemBuilder: (context, i) {
@@ -267,9 +272,27 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             onPressed: () => setState(() => _searching = true),
           ),
         if (showActions)
+          PopupMenuButton<FeedSort>(
+            tooltip: 'Sort',
+            icon: const Icon(Icons.sort_rounded),
+            initialValue: _sort,
+            onSelected: (s) => setState(() => _sort = s),
+            itemBuilder: (_) => [
+              for (final s in FeedSort.values) ...[
+                if (s is ByDimension && s.dimension == Dimension.values.first)
+                  const PopupMenuDivider(),
+                CheckedPopupMenuItem(
+                  value: s,
+                  checked: s == _sort,
+                  child: Text(s.label),
+                ),
+              ],
+            ],
+          ),
+        if (showActions)
           IconButton(
             tooltip: 'Filter',
-            icon: const Icon(Icons.sort_rounded),
+            icon: const Icon(Icons.tune_rounded),
             onPressed: () => _openFilters(journal),
           ),
       ],

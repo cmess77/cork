@@ -143,3 +143,67 @@ bool _matches(Entry e, FeedFilter f, Iterable<String> words) {
   );
   return words.every(haystack.contains);
 }
+
+/// How the journal orders, and sections, the filtered feed.
+sealed class FeedSort {
+  const FeedSort(this.label);
+  final String label;
+
+  static const newest = ByDate(newestFirst: true);
+  static const oldest = ByDate(newestFirst: false);
+  static const rating = ByScore();
+  static const name = ByName();
+
+  static final values = <FeedSort>[
+    newest,
+    oldest,
+    rating,
+    name,
+    for (final d in Dimension.values) ByDimension(d),
+  ];
+}
+
+final class ByDate extends FeedSort {
+  const ByDate({required this.newestFirst})
+    : super(newestFirst ? 'Newest' : 'Oldest');
+  final bool newestFirst;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ByDate && other.newestFirst == newestFirst;
+
+  @override
+  int get hashCode => newestFirst.hashCode;
+}
+
+final class ByScore extends FeedSort {
+  const ByScore() : super('Highest rated');
+
+  @override
+  bool operator ==(Object other) => other is ByScore;
+
+  @override
+  int get hashCode => (ByScore).hashCode;
+}
+
+final class ByName extends FeedSort {
+  const ByName() : super('Name');
+
+  @override
+  bool operator ==(Object other) => other is ByName;
+
+  @override
+  int get hashCode => (ByName).hashCode;
+}
+
+final class ByDimension extends FeedSort {
+  ByDimension(this.dimension) : super(dimension.label);
+  final Dimension dimension;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ByDimension && other.dimension == dimension;
+
+  @override
+  int get hashCode => dimension.hashCode;
+}

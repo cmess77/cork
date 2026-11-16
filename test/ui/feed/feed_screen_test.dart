@@ -284,4 +284,79 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(FeedScreen), findsNothing);
   });
+
+  Future<void> sortBy(WidgetTester tester, String label) async {
+    await tester.tap(find.byTooltip('Sort'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(CheckedPopupMenuItem<FeedSort>, label),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  double rowY(WidgetTester tester, String name) =>
+      tester.getTopLeft(find.text(name).first).dy;
+
+  testWidgets('sorts by rating, highest first, without month headings', (
+    tester,
+  ) async {
+    tallView(tester);
+    await tester.pumpWidget(seeded().wrap(const FeedScreen()));
+
+    await sortBy(tester, 'Highest rated');
+
+    expect(find.text('NOVEMBER 2026'), findsNothing);
+    final h = rowY(tester, 'Hermitage');
+    final c = rowY(tester, 'Crozes-Hermitage');
+    final s = rowY(tester, 'Soave Classico');
+    expect(h < c && c < s, isTrue);
+  });
+
+  testWidgets('sorts oldest first and by name', (tester) async {
+    tallView(tester);
+    await tester.pumpWidget(seeded().wrap(const FeedScreen()));
+
+    await sortBy(tester, 'Oldest');
+    expect(
+      tester.getTopLeft(find.text('OCTOBER 2026')).dy <
+          tester.getTopLeft(find.text('NOVEMBER 2026')).dy,
+      isTrue,
+    );
+
+    await sortBy(tester, 'Name');
+    final c = rowY(tester, 'Crozes-Hermitage');
+    final h = rowY(tester, 'Hermitage');
+    final s = rowY(tester, 'Soave Classico');
+    expect(c < h && h < s, isTrue);
+  });
+
+  testWidgets('sorts by grape under a heading per grape, blends in each', (
+    tester,
+  ) async {
+    tallView(tester);
+    final blend = indexWine(
+      4,
+      name: 'Côtes du Rhône',
+      grapes: ['Syrah', 'Grenache'],
+    );
+    final mystery = indexWine(5, name: 'Mystery Red', grapes: const []);
+    final h = Harness.create(
+      journal: journalOf([
+        (soave, tasting(soave, at: localNoon(2026, 11, 3))),
+        (blend, tasting(blend, at: localNoon(2026, 11, 5))),
+        (mystery, tasting(mystery, at: localNoon(2026, 11, 6))),
+      ]),
+    );
+    await tester.pumpWidget(h.wrap(const FeedScreen()));
+
+    await sortBy(tester, 'Grape');
+
+    final garganega = tester.getTopLeft(find.text('GARGANEGA')).dy;
+    final grenache = tester.getTopLeft(find.text('GRENACHE')).dy;
+    final syrah = tester.getTopLeft(find.text('SYRAH')).dy;
+    final none = tester.getTopLeft(find.text('NOT RECORDED')).dy;
+    expect(garganega < grenache && grenache < syrah && syrah < none, isTrue);
+    expect(find.text('Côtes du Rhône'), findsNWidgets(2));
+    expect(rowY(tester, 'Mystery Red') > none, isTrue);
+  });
 }
