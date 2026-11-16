@@ -1,6 +1,9 @@
-# Push a vX.Y.Z tag on main to publish a signed APK as a Forgejo release.
-# The push mirror carries the same tag to GitHub, where
-# .github/workflows/release.yml publishes the same APK there.
+# Publishes a release for a vX.Y.Z tag pushed by hand, or re-run by
+# workflow_dispatch. Normal releases need neither: ci.yml cuts and publishes
+# one on each push to main that has a feat, fix, or perf commit, because a tag
+# pushed with the workflow token does not start this workflow. The push
+# mirror carries every tag to GitHub, where .github/workflows/release.yml
+# publishes the same APK.
 #
 # Repository secrets (Settings > Actions > Secrets): CORK_KEYSTORE_BASE64,
 # CORK_KEYSTORE_PASSWORD.
@@ -48,21 +51,4 @@ jobs:
       - name: Publish Forgejo release
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          tag="$GITHUB_REF_NAME"
-          version="${tag#v}"
-          apk="dist/cork-$version.apk"
-          prerelease=false
-          case "$version" in *-*) prerelease=true ;; esac
-          api="$GITHUB_SERVER_URL/api/v1/repos/$GITHUB_REPOSITORY"
-          body="$(dart tool/release.dart notes "$version" --json)"
-          release_id="$(curl -fsS -X POST "$api/releases" \
-            -H "Authorization: token $TOKEN" \
-            -H 'Content-Type: application/json' \
-            -d "{\"tag_name\":\"$tag\",\"name\":\"Cork $version\",\"body\":$body,\"prerelease\":$prerelease}" \
-            | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
-          curl -fsS -X POST "$api/releases/$release_id/assets?name=cork-$version.apk" \
-            -H "Authorization: token $TOKEN" \
-            -F "attachment=@$apk" > /dev/null
-          echo "Published $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag"
+        run: bash tool/ci/publish_forgejo_release.sh "$GITHUB_REF_NAME"

@@ -24,14 +24,22 @@ CI rejects any commit since the last release that doesn't parse.
 ## Releasing
 
 Versions follow [Semantic Versioning](https://semver.org) and come from the
-commits, not by hand:
+commits. Releasing is automatic: once CI passes on a push to main with a
+`feat`, `fix`, or `perf` commit since the last release, it runs
+`dart tool/release.dart cut`, which writes CHANGELOG.md and the version,
+commits `chore(release): vX.Y.Z`, and tags it. CI then pushes that commit and
+tag and publishes the signed APK on Forgejo. The push mirror carries the tag
+to GitHub, which publishes the same APK. Pull after a release to pick up the
+release commit.
 
 ```bash
 dart tool/release.dart plan      # preview the next version and its notes
-dart tool/release.dart cut       # write CHANGELOG.md and pubspec, commit, tag
-git push --follow-tags origin main
 ```
 
-`cut --version 1.0.0` picks the version yourself, for a deliberate 1.0.0.
-The tag builds a signed APK on Forgejo and, through the push mirror, GitHub,
-with the CHANGELOG.md section as the release notes.
+To choose the version yourself, as for a deliberate 1.0.0, cut it locally
+and push the tag:
+
+```bash
+dart tool/release.dart cut --version 1.0.0
+git push --follow-tags origin main
+```

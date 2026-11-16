@@ -1,5 +1,8 @@
-# Analyze and test every push and PR to main. Installable APKs come from
-# release.yml, which runs when a vX.Y.Z tag is pushed.
+# Analyze and test every push and PR to main. A push to main with a feat,
+# fix, or perf commit since the last release then cuts that release: it
+# commits the changelog and version, tags, pushes, and publishes the signed
+# APK. The push
+# mirror carries the tag to GitHub, which publishes the same APK there.
 #
 # `runs-on: default` matches the registered Forgejo runner label.
 
@@ -47,3 +50,21 @@ jobs:
 
       - name: Test
         run: flutter test
+
+      - name: Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          CORK_KEYSTORE_BASE64: ${{ secrets.CORK_KEYSTORE_BASE64 }}
+          CORK_KEYSTORE_PASSWORD: ${{ secrets.CORK_KEYSTORE_PASSWORD }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name 'Cork release'
+          git config user.email 'release@cork.invalid'
+          before="$(git rev-parse HEAD)"
+          dart tool/release.dart cut --if-needed
+          [ "$(git rev-parse HEAD)" != "$before" ] || exit 0
+          tag="$(git describe --tags --exact-match HEAD)"
+          git push --follow-tags origin HEAD:main
+          bash tool/ci/build_release_apk.sh "$tag"
+          bash tool/ci/publish_forgejo_release.sh "$tag"

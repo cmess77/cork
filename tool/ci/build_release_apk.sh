@@ -3,13 +3,14 @@
 # dist/cork-<version>.apk. Shared by the Forgejo and GitHub release
 # workflows so both forges publish byte-for-byte the same version.
 #
-# Needs: a vX.Y.Z tag checked out with full history, and the secrets
+# Usage: build_release_apk.sh [TAG], TAG defaulting to the pushed tag.
+# Needs: that vX.Y.Z tag checked out with full history, and the secrets
 # CORK_KEYSTORE_BASE64 and CORK_KEYSTORE_PASSWORD in the environment. The
 # keystore is PKCS12, where the key password must equal the store password,
 # and its one key is aliased "cork", so neither is a separate secret.
 set -euo pipefail
 
-tag="${GITHUB_REF_NAME:?run from a tag push}"
+tag="${1:-${GITHUB_REF_NAME:?pass the tag or run from a tag push}}"
 case "$tag" in
   v[0-9]*) ;;
   *) echo "tag '$tag' is not vX.Y.Z" >&2; exit 1 ;;

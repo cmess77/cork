@@ -3,7 +3,7 @@
 //   dart tool/release.dart check-message FILE  # the commit-msg hook
 //   dart tool/release.dart lint                # every commit since the last tag
 //   dart tool/release.dart plan                # the next version and its notes
-//   dart tool/release.dart cut [--version X.Y.Z]
+//   dart tool/release.dart cut [--version X.Y.Z] [--if-needed]
 //   dart tool/release.dart notes X.Y.Z [--json]
 //
 // `cut` writes CHANGELOG.md, the pubspec version, and lib/app/version.dart,
@@ -30,7 +30,10 @@ void main(List<String> args) {
       stdout.writeln('next version: $version\n\n$section');
     case 'cut':
       final i = args.indexOf('--version');
-      _cut(i == -1 ? null : Version.parse(args[i + 1]));
+      _cut(
+        i == -1 ? null : Version.parse(args[i + 1]),
+        ifNeeded: args.contains('--if-needed'),
+      );
     case 'notes' when args.length >= 2:
       final notes = _notes(Version.parse(args[1]));
       stdout.write(args.contains('--json') ? jsonEncode(notes) : notes);
@@ -41,7 +44,7 @@ void main(List<String> args) {
 
 Never _usage() => _fail(
   'usage: dart tool/release.dart '
-  '(check-message FILE | lint | plan | cut [--version X.Y.Z] | '
+  '(check-message FILE | lint | plan | cut [--version X.Y.Z] [--if-needed] | '
   'notes X.Y.Z [--json])',
 );
 
@@ -116,11 +119,16 @@ void _lint() {
   stdout.writeln('${commits.length} commits since $tag are conventional');
 }
 
-(Version, String) _plan(Version? requested) {
+/// [ifNeeded] turns "nothing to release" into a successful no-op, for CI.
+(Version, String) _plan(Version? requested, {bool ifNeeded = false}) {
   final (tag, current) = _lastTag();
   final commits = _commitsSince(tag);
   final bump = bumpFor(commits);
   final version = requested ?? current.bumped(bump);
+  if (version.compareTo(current) <= 0 && requested == null && ifNeeded) {
+    stdout.writeln('nothing to release since $tag');
+    exit(0);
+  }
   if (version.compareTo(current) <= 0) {
     _fail(
       requested == null
@@ -133,14 +141,14 @@ void _lint() {
   return (version, changelogSection(version, date, commits));
 }
 
-void _cut(Version? requested) {
+void _cut(Version? requested, {required bool ifNeeded}) {
   if (_git(['status', '--porcelain']).isNotEmpty) {
     _fail('commit or stash your changes first');
   }
   if (_git(['branch', '--show-current']) != 'main') {
     _fail('release from main');
   }
-  final (version, section) = _plan(requested);
+  final (version, section) = _plan(requested, ifNeeded: ifNeeded);
 
   final changelog = File(_changelog);
   final old = changelog.readAsStringSync().replaceAll('\r\n', '\n');
