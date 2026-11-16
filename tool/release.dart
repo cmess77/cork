@@ -6,9 +6,9 @@
 //   dart tool/release.dart cut [--version X.Y.Z]
 //   dart tool/release.dart notes X.Y.Z [--json]
 //
-// `cut` writes CHANGELOG.md and the pubspec version, commits
-// "chore(release): vX.Y.Z", and tags it. Pushing the tag runs the release
-// workflows on Forgejo and, through the push mirror, GitHub.
+// `cut` writes CHANGELOG.md, the pubspec version, and lib/app/version.dart,
+// commits "chore(release): vX.Y.Z", and tags it. Pushing the tag runs the
+// release workflows on Forgejo and, through the push mirror, GitHub.
 import 'dart:convert';
 import 'dart:io';
 
@@ -16,6 +16,7 @@ import 'src/conventional.dart';
 
 const _changelog = 'CHANGELOG.md';
 const _pubspec = 'pubspec.yaml';
+const _appVersion = 'lib/app/version.dart';
 
 void main(List<String> args) {
   if (args.isEmpty) _usage();
@@ -160,7 +161,9 @@ void _cut(Version? requested) {
     ),
   );
 
-  _git(['add', _changelog, _pubspec]);
+  File(_appVersion).writeAsStringSync("const appVersion = '$version';\n");
+
+  _git(['add', _changelog, _pubspec, _appVersion]);
   _git(['commit', '-m', 'chore(release): v$version']);
   _git(['tag', '-a', 'v$version', '-m', 'Cork $version']);
   stdout.writeln(
