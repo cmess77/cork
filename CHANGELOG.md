@@ -5,6 +5,12 @@ written by `dart tool/release.dart cut` from the
 [Conventional Commits](https://www.conventionalcommits.org) since the last
 release.
 
+## 0.5.1 (2026-11-16)
+
+### Fixes
+
+- **release:** keep the app version constant in step (7fb2e9d)
+
 ## 0.5.0 (2026-11-16)
 
 First signed release.
