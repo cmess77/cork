@@ -49,3 +49,10 @@ The judge was a Fable model judging a Fable candidate. That is a possible bias, 
 - `sqlite3` plus `sqlite3_flutter_libs`, so Android ships a SQLite build with FTS5 instead of relying on the system SQLite. Verify FTS5 and `remove_diacritics 2` on the emulator before building screens on top.
 - The journal uses document rows (`id`, foreign key, `doc` JSON), as the base specifies. `PRAGMA user_version` gates rare table-shape changes.
 - State management is Riverpod with hand-written providers in `lib/app/providers.dart`.
+
+## Implementation reconciliation
+
+Deviations found while building, each with its reason. Where an entry here disagrees with the sections above, this entry wins.
+
+- **No `sqlite3_flutter_libs`.** `package:sqlite3` 3.x compiles and bundles its own SQLite (3.53.4, with FTS5) through Dart build hooks, and `sqlite3_flutter_libs` is end-of-life. `integration_test/index_gate_test.dart` proves FTS5 and `remove_diacritics 2` on the device. Measured on the medium_phone emulator, debug build: cold index install 1488 ms, warm 21 ms, first query 5 ms.
+- **Fonts are bundled, not fetched.** `google_fonts` downloads fonts at runtime, which breaks the offline-first rule. The OFL Sofia Sans variable fonts live in `assets/fonts/` and `CorkFonts` in `cork_theme.dart` sets both `fontWeight` and the `wght` axis, because a variable font file otherwise renders every weight at its default instance.

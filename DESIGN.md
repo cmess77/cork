@@ -192,7 +192,7 @@ Glass colours live in `glass_colors.dart`: 17 hues (whites: water-white, green-y
 
 ## Typography
 
-**Display / Board Font:** Sofia Sans Extra Condensed (via `google_fonts`)
+**Display / Board Font:** Sofia Sans Extra Condensed (bundled variable fonts in `assets/fonts/`, OFL; the app never fetches fonts)
 **Title Font:** Sofia Sans Condensed
 **Body / Label Font:** Sofia Sans
 

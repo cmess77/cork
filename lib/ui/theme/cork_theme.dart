@@ -1,8 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'glass_colors.dart';
+
+/// The bundled Sofia Sans superfamily. The files are variable fonts, so each
+/// weight is also set on the `wght` axis. Change weight with [withWeight].
+abstract final class CorkFonts {
+  static const sansFamily = 'Sofia Sans';
+  static const condensedFamily = 'Sofia Sans Condensed';
+  static const extraCondensedFamily = 'Sofia Sans Extra Condensed';
+
+  static TextStyle sans({
+    required double size,
+    required double lineHeight,
+    required FontWeight weight,
+    double letterSpacing = 0,
+    Color? color,
+  }) => _face(sansFamily, size, lineHeight, weight, letterSpacing, color);
+
+  static TextStyle condensed({
+    required double size,
+    required double lineHeight,
+    required FontWeight weight,
+    double letterSpacing = 0,
+    Color? color,
+  }) => _face(condensedFamily, size, lineHeight, weight, letterSpacing, color);
+
+  static TextStyle extraCondensed({
+    required double size,
+    required double lineHeight,
+    required FontWeight weight,
+    double letterSpacing = 0,
+    Color? color,
+  }) => _face(
+    extraCondensedFamily,
+    size,
+    lineHeight,
+    weight,
+    letterSpacing,
+    color,
+  );
+
+  static TextStyle withWeight(TextStyle style, FontWeight weight) =>
+      style.copyWith(
+        fontWeight: weight,
+        fontVariations: [FontVariation.weight(weight.value.toDouble())],
+      );
+
+  static TextStyle _face(
+    String family,
+    double size,
+    double lineHeight,
+    FontWeight weight,
+    double letterSpacing,
+    Color? color,
+  ) => TextStyle(
+    fontFamily: family,
+    fontSize: size,
+    height: lineHeight / size,
+    fontWeight: weight,
+    fontVariations: [FontVariation.weight(weight.value.toDouble())],
+    letterSpacing: letterSpacing,
+    color: color,
+  );
+}
 
 /// Eleven-step slate ramp, darkest to lightest. Every neutral in Cork snaps
 /// to one of these steps; surface containers and outlines are picked from it.
@@ -340,46 +401,43 @@ abstract final class CorkTheme {
     boardHeading: _boardHeading(lightScheme.onSurfaceVariant),
   );
 
-  static TextStyle _scoreNumeral(Color color) =>
-      GoogleFonts.sofiaSansExtraCondensed(
-        fontSize: 28,
-        height: 32 / 28,
-        fontWeight: FontWeight.w700,
-        color: color,
-        fontFeatures: const [FontFeature.tabularFigures()],
-      );
+  static TextStyle _scoreNumeral(Color color) => CorkFonts.extraCondensed(
+    size: 28,
+    lineHeight: 32,
+    weight: FontWeight.w700,
+    color: color,
+  ).copyWith(fontFeatures: const [FontFeature.tabularFigures()]);
 
-  static TextStyle _boardHeading(Color color) =>
-      GoogleFonts.sofiaSansExtraCondensed(
-        fontSize: 16,
-        height: 20 / 16,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.2,
-        color: color,
-      );
+  static TextStyle _boardHeading(Color color) => CorkFonts.extraCondensed(
+    size: 16,
+    lineHeight: 20,
+    weight: FontWeight.w700,
+    letterSpacing: 1.2,
+    color: color,
+  );
 
   static TextTheme _textTheme(Color ink) {
     TextStyle board(double size, double lh, FontWeight w, [double ls = 0]) =>
-        GoogleFonts.sofiaSansExtraCondensed(
-          fontSize: size,
-          height: lh / size,
-          fontWeight: w,
+        CorkFonts.extraCondensed(
+          size: size,
+          lineHeight: lh,
+          weight: w,
           letterSpacing: ls,
           color: ink,
         );
     TextStyle title(double size, double lh, [double ls = 0]) =>
-        GoogleFonts.sofiaSansCondensed(
-          fontSize: size,
-          height: lh / size,
-          fontWeight: FontWeight.w600,
+        CorkFonts.condensed(
+          size: size,
+          lineHeight: lh,
+          weight: FontWeight.w600,
           letterSpacing: ls,
           color: ink,
         );
     TextStyle text(double size, double lh, FontWeight w, [double ls = 0]) =>
-        GoogleFonts.sofiaSans(
-          fontSize: size,
-          height: lh / size,
-          fontWeight: w,
+        CorkFonts.sans(
+          size: size,
+          lineHeight: lh,
+          weight: w,
           letterSpacing: ls,
           color: ink,
         );
