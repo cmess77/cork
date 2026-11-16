@@ -209,10 +209,10 @@ class _SwipePainter extends CustomPainter {
     canvas.save();
     canvas.clipRect(Rect.fromLTWH(0, -1, w, h + 2));
 
-    if (underlay != null) {
+    if (underlay case final u?) {
       canvas.drawRect(
         Rect.fromLTWH(0, h - 1, size.width, 1),
-        Paint()..color = underlay!,
+        Paint()..color = u,
       );
     }
 

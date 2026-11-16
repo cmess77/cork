@@ -397,7 +397,7 @@ class _TastingDetails extends ConsumerWidget {
     final dpr = MediaQuery.devicePixelRatioOf(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        CorkSpace.gutter + 56 + CorkSpace.lg,
+        CorkSpace.gutter + TastingThumb.size + CorkSpace.lg,
         0,
         CorkSpace.gutter,
         CorkSpace.md,

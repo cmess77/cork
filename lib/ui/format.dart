@@ -9,9 +9,9 @@ final _dayYear = DateFormat('MMM d, y');
 final _month = DateFormat('MMMM y');
 final _time = DateFormat.jm();
 
-String dayLabel(DateTime utc, {DateTime? now}) {
+String dayLabel(DateTime utc) {
   final local = utc.toLocal();
-  final today = now ?? DateTime.now();
+  final today = DateTime.now();
   return local.year == today.year ? _day.format(local) : _dayYear.format(local);
 }
 
@@ -35,8 +35,7 @@ String wineSubtitle(Wine wine) => [
 String whenAndWhere(Tasting t) =>
     [dayLabel(t.tastedAt), t.place].whereType<String>().join(' · ');
 
-String countLabel(int n, String one, [String? many]) =>
-    '$n ${n == 1 ? one : (many ?? '${one}s')}';
+String countLabel(int n, String one) => '$n ${n == 1 ? one : '${one}s'}';
 
 String summaryLine(int tastings, int wines, double mean) => [
   countLabel(tastings, 'tasting'),

@@ -29,14 +29,11 @@ Future<PickedWine?> pickWine(BuildContext context) => Navigator.push(
 enum _Purpose { log, wishlist, pick }
 
 class WineSearchScreen extends ConsumerStatefulWidget {
-  const WineSearchScreen({super.key, this.mode = SearchMode.log})
+  const WineSearchScreen({super.key, SearchMode mode = SearchMode.log})
     : _purpose = mode == SearchMode.log ? _Purpose.log : _Purpose.wishlist;
 
-  const WineSearchScreen._picking()
-    : mode = SearchMode.log,
-      _purpose = _Purpose.pick;
+  const WineSearchScreen._picking() : _purpose = _Purpose.pick;
 
-  final SearchMode mode;
   final _Purpose _purpose;
 
   @override

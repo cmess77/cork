@@ -6,6 +6,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import '../../domain/scales.dart';
 import '../../domain/stats.dart';
 import '../../domain/tasting.dart';
+import '../format.dart';
 import '../theme/cork_theme.dart';
 
 final _tickMonth = DateFormat("MMM ''yy");
@@ -35,8 +36,8 @@ class TrendChart extends StatelessWidget {
     final spoken = [
       for (final m in months)
         '${_spokenMonth.format(m.month)}: average '
-            '${meanScore(m.tally).format()} from ${m.tally.count} '
-            '${m.tally.count == 1 ? 'tasting' : 'tastings'}',
+            '${meanScore(m.tally).format()} from '
+            '${countLabel(m.tally.count, 'tasting')}',
     ].join('; ');
     return Semantics(
       container: true,

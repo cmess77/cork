@@ -10,9 +10,10 @@ import '../theme/cork_theme.dart';
 import 'chalk.dart';
 
 class TastingThumb extends ConsumerWidget {
-  const TastingThumb(this.tasting, {super.key, this.size = 56});
+  const TastingThumb(this.tasting, {super.key});
   final Tasting tasting;
-  final double size;
+
+  static const size = 56.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
