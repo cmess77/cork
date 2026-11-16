@@ -84,7 +84,7 @@ bool enabled(WidgetTester tester, String label) => tester
     .widget<ButtonStyleButton>(
       find.ancestor(
         of: find.text(label),
-        matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+        matching: find.bySubtype<ButtonStyleButton>(),
       ),
     )
     .enabled;

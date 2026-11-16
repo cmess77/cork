@@ -25,10 +25,11 @@ void main() {
 
   test('deleting a tasting re-derives: the badge drops back to progress', () {
     final grapes = ['Syrah', 'Merlot', 'Riesling', 'Malbec', 'Gamay'];
-    final pairs = [
+    final wines = [
       for (var i = 0; i < grapes.length; i++)
-        (indexWine(i + 1, grapes: [grapes[i]]), null),
-    ].map((p) => (p.$1, tasting(p.$1))).toList();
+        indexWine(i + 1, grapes: [grapes[i]]),
+    ];
+    final pairs = [for (final w in wines) (w, tasting(w))];
     final j = journalOf(pairs);
     expect(status(j, 'g5').earned, isTrue);
     expect(status(j, 'g5').counted, hasLength(5));
@@ -54,10 +55,10 @@ void main() {
   });
 
   test('Full flight needs all six wine types', () {
-    final pairs = [
-      for (final type in WineType.values)
-        (indexWine(type.index + 1, type: type), null),
-    ].map((p) => (p.$1, tasting(p.$1))).toList();
+    final wines = [
+      for (final type in WineType.values) indexWine(type.index + 1, type: type),
+    ];
+    final pairs = [for (final w in wines) (w, tasting(w))];
     final j = journalOf(pairs);
     expect(status(j, 'types').rule.target, 6);
     expect(status(j, 'types').earned, isTrue);

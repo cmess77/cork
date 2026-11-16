@@ -157,11 +157,6 @@ Future<void> pickTopHit(WidgetTester tester, String query) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> openRowMenu(WidgetTester tester, String wineName) async {
-  await tester.longPress(within<FeedScreen>(find.text(wineName)));
-  await tester.pumpAndSettle();
-}
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

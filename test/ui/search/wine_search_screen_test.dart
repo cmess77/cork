@@ -95,7 +95,7 @@ bool enabled(WidgetTester tester, String label) => tester
     .widget<ButtonStyleButton>(
       find.ancestor(
         of: find.text(label),
-        matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+        matching: find.bySubtype<ButtonStyleButton>(),
       ),
     )
     .enabled;
@@ -180,9 +180,9 @@ void main() {
     expect(enabled(tester, 'Search online'), isFalse);
   });
 
-  for (final (result, message) in [
+  for (final (result, message) in <(OnlineResult, String)>[
     (
-      const OnlineUnavailable() as OnlineResult,
+      const OnlineUnavailable(),
       "You're offline. Your saved wines and the built-in list still work.",
     ),
     (

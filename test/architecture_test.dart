@@ -35,8 +35,6 @@ void main() {
       'package:sqlite3',
       'package:http',
     ];
-    final ui = Directory('lib/ui');
-    if (!ui.existsSync()) return;
     for (final MapEntry(key: file, value: uris) in importsUnder(
       'lib/ui',
     ).entries) {

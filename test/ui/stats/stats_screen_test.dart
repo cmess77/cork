@@ -97,7 +97,7 @@ void main() {
     await tester.pumpWidget(h.wrap(const StatsScreen()));
 
     expect(find.text('Stats appear after your first tasting.'), findsOne);
-    expect(find.text('Average over time'.toUpperCase()), findsNothing);
+    expect(find.text('AVERAGE OVER TIME'), findsNothing);
   });
 
   testWidgets('the range excludes tastings older than it', (tester) async {

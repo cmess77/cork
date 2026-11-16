@@ -1,4 +1,3 @@
-import 'package:cork/domain/glass_color.dart';
 import 'package:cork/domain/ids.dart';
 import 'package:cork/domain/journal.dart';
 import 'package:cork/ui/badges/badges_screen.dart';
@@ -74,14 +73,10 @@ void main() {
     tester,
   ) async {
     tallView(tester);
-    const ruby = GlassColor(GlassHue.ruby, GlassIntensity.medium);
     final h = Harness.create(
       journal: journalOf([
-        (hermitage, tasting(hermitage, at: nov3, color: ruby)),
-        (
-          barolo,
-          tasting(barolo, at: nov3.add(const Duration(days: 1)), color: ruby),
-        ),
+        (hermitage, tasting(hermitage, at: nov3)),
+        (barolo, tasting(barolo, at: nov3.add(const Duration(days: 1)))),
       ]),
     );
     await tester.pumpWidget(h.wrap(const BadgesScreen()));

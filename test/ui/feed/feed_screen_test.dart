@@ -243,7 +243,7 @@ void main() {
     await tester.tap(find.text('Crozes-Hermitage'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Your verdict'.toUpperCase()), findsOneWidget);
+    expect(find.text('YOUR VERDICT'), findsOneWidget);
     expect(find.text('Smoky bacon fat'), findsOneWidget);
   });
 
