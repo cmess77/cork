@@ -32,6 +32,15 @@ export CORK_KEYSTORE="$keystore"
 export CORK_KEY_ALIAS=cork
 export CORK_KEY_PASSWORD="$CORK_KEYSTORE_PASSWORD"
 
+# Fail fast, before the slow build, if the secrets don't open the key.
+# The fingerprint and length identify a bad paste without revealing it.
+echo "keystore sha256 $(sha256sum < "$keystore" | cut -c1-16), $(wc -c < "$keystore") bytes; password ${#CORK_KEYSTORE_PASSWORD} chars"
+if ! keytool -list -keystore "$keystore" -storepass:env CORK_KEYSTORE_PASSWORD \
+    -alias "$CORK_KEY_ALIAS" > /dev/null; then
+  echo "CORK_KEYSTORE_BASE64 / CORK_KEYSTORE_PASSWORD do not open key '$CORK_KEY_ALIAS'" >&2
+  exit 1
+fi
+
 flutter config --no-analytics
 flutter pub get
 flutter build apk --release \
