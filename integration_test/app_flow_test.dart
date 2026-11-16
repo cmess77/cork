@@ -1,8 +1,3 @@
-// The whole app on a device: real stores in a fresh app-support
-// subdirectory, the bundled index, and fakes only behind the photo picker
-// and file dialog seams. Run with:
-//   flutter test integration_test/app_flow_test.dart -d emulator-5554
-
 import 'dart:io';
 
 import 'package:cork/app/app_dirs.dart';
@@ -32,7 +27,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-/// `main.dart`'s composition, rooted in its own directory.
 final class TestApp {
   TestApp._(this.root, this.store, this.lookup, this.backup, this.overrides);
 
@@ -75,7 +69,6 @@ final class TestApp {
   final Backup backup;
   final List<Override> overrides;
 
-  /// The scopes sit above MaterialApp, so every route finds them.
   Widget widget({
     required LabelPhotoPicker picker,
     required FileDialogs dialogs,
@@ -92,9 +85,7 @@ final class TestApp {
     store.dispose();
     try {
       root.deleteSync(recursive: true);
-    } on FileSystemException {
-      // The OS can hold the db file briefly after close.
-    }
+    } on FileSystemException catch (_) {}
   }
 }
 
@@ -135,7 +126,6 @@ Future<void> waitFor(
   await tester.pumpAndSettle();
 }
 
-/// The shell keeps every destination built, so scope finds to one screen.
 Finder within<T extends Widget>(Finder finder) =>
     find.descendant(of: find.byType(T), matching: finder);
 
@@ -156,7 +146,6 @@ Future<void> tapVisible(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
-/// Types into wine search and picks the top hit.
 Future<void> pickTopHit(WidgetTester tester, String query) async {
   await tester.enterText(find.byType(TextField), query);
   final rows = find.descendant(

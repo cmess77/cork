@@ -11,15 +11,12 @@ import '../theme/cork_theme.dart';
 final _tickMonth = DateFormat("MMM ''yy");
 final _spokenMonth = DateFormat('MMMM y');
 
-/// Mean of a non-empty tally on the 0.1 score grid, so every average on the
-/// screen formats the same way a single score does.
+/// Mean of a non-empty tally on the 0.1 score grid.
 Score meanScore(Tally t) => Score.fromTenths((t.tenthsSum / t.count).round());
 
 TextStyle? _tabular(TextStyle? s) =>
     s?.copyWith(fontFeatures: const [FontFeature.tabularFigures()]);
 
-/// A diameter from the fixed score-dot ramp, picked by [value]'s share of
-/// [max], so the same magnitude classes serve every dot plot.
 double _rampDiameter(int value, int max) {
   const ramp = CorkTokens.scoreDotRamp;
   if (max <= 1) return ramp[ramp.length ~/ 2];
@@ -27,7 +24,6 @@ double _rampDiameter(int value, int max) {
   return ramp[step.clamp(0, ramp.length - 1)];
 }
 
-/// Monthly mean score on a 1 to 5 axis, dots sized by tasting count.
 class TrendChart extends StatelessWidget {
   const TrendChart(this.months, {super.key});
   final List<MonthTally> months;
@@ -175,8 +171,6 @@ String _binRange(ScoreBin b) => b.fromTenths >= Score.max.tenths
     ? _binLabel(b)
     : '${_binLabel(b)} to ${Score.fromTenths(b.fromTenths + 4).format()}';
 
-/// The score histogram as a row of dots, one per half-point bin, each sized
-/// from the score-dot ramp by its share of the busiest bin.
 class ScoreDotPlot extends StatelessWidget {
   const ScoreDotPlot(this.bins, {super.key});
   final List<ScoreBin> bins;
@@ -238,8 +232,6 @@ class ScoreDotPlot extends StatelessWidget {
   }
 }
 
-/// Six horizontal bars, one per WSET sweetness term, longest at the
-/// busiest term.
 class SweetnessBars extends StatelessWidget {
   const SweetnessBars(this.counts, {super.key});
   final Map<Sweetness, int> counts;
@@ -296,7 +288,6 @@ class SweetnessBars extends StatelessWidget {
   }
 }
 
-/// A flat bar drawn from the leading edge, [fraction] of the available width.
 class CountBar extends StatelessWidget {
   const CountBar({
     super.key,

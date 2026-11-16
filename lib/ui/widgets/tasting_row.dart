@@ -9,7 +9,6 @@ import '../format.dart';
 import '../theme/cork_theme.dart';
 import 'chalk.dart';
 
-/// The label photo, or the glass swatch when there is none (or it is gone).
 class TastingThumb extends ConsumerWidget {
   const TastingThumb(this.tasting, {super.key, this.size = 56});
   final Tasting tasting;
@@ -39,8 +38,6 @@ class TastingThumb extends ConsumerWidget {
   }
 }
 
-/// A feed row: thumb, wine name over its chalk swipe, winery and vintage,
-/// when and where, and the score tight to the right gutter.
 class TastingRow extends ConsumerWidget {
   const TastingRow(
     this.entry, {
@@ -54,7 +51,6 @@ class TastingRow extends ConsumerWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  /// Wine detail rows lead with the date and vintage instead of the name.
   final bool datedTitle;
 
   @override

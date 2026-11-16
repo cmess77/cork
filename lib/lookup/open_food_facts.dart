@@ -7,9 +7,8 @@ import '../domain/ids.dart';
 import '../domain/wine.dart';
 import 'wine_lookup.dart';
 
-/// Full-text search against Open Food Facts, restricted to wines. Only the v1
-/// `cgi/search.pl` endpoint takes free-text terms; `/api/v2/search` filters by
-/// tag only. Products are parsed into [Wine]s here and nowhere else.
+/// Only the v1 `cgi/search.pl` endpoint takes free-text terms;
+/// `/api/v2/search` filters by tag only.
 final class OpenFoodFacts {
   OpenFoodFacts({
     required String appVersion,
@@ -54,8 +53,6 @@ final class OpenFoodFacts {
         parseProducts(jsonDecode(utf8.decode(response.bodyBytes))),
       );
     } on Exception {
-      // Every expected failure is an Exception: timeout, socket, client, and
-      // the FormatException a malformed payload raises.
       return const OnlineUnavailable();
     }
   }
@@ -137,14 +134,12 @@ Wine? _wine(Object? product) {
   );
 }
 
-/// Tag names without their language prefix: 'en:red-wines' -> 'red-wines'.
 Set<String> _tags(Object? tags) => {
   if (tags is List)
     for (final t in tags)
       if (t is String) t.substring(t.indexOf(':') + 1),
 };
 
-/// Most specific first: a sparkling rosé is sparkling, a port is also red.
 const _typeTags = [
   (WineType.fortified, ['fortified-wines', 'ports', 'port-wines']),
   (WineType.sparkling, ['sparkling-wines', 'champagnes']),
@@ -161,9 +156,8 @@ WineType? _type(Set<String> categories) {
   return null;
 }
 
-/// Only a single origin counts as clear. Codes and names are the index's own
-/// (X-Wines writes the United Kingdom as 'UK'), so stats group an online wine
-/// with index wines from the same country.
+/// Codes and names are the index's own (X-Wines writes the United Kingdom as
+/// 'UK'), so stats group an online wine with index wines from the same country.
 Country? _country(Set<String> origins) =>
     origins.length == 1 ? _origins[origins.single] : null;
 

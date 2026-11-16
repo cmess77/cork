@@ -1,8 +1,6 @@
 import 'aroma_wheel.dart';
 import 'ids.dart';
 
-/// Ids are `family.subcategory-slug.descriptor-slug`. They are stored in
-/// journals, so `test/domain/aroma_wheel_test.dart` keeps this list append-only.
 final aromaWheel = AromaWheel([
   _category(AromaFamily.fruit, {
     'Citrus': ['Lemon', 'Lime', 'Grapefruit', 'Orange peel'],

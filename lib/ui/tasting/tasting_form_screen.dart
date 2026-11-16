@@ -129,7 +129,6 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
     }
   }
 
-  /// Every user change goes through here, so the discard guard knows.
   void _edit(VoidCallback change, [DraftField? clears]) => setState(() {
     change();
     _dirty = true;
@@ -775,7 +774,6 @@ class _TastingFormState extends ConsumerState<TastingFormScreen> {
   }
 }
 
-/// Places from past tastings, most recent first, one per folded spelling.
 List<String> _pastPlaces(Journal journal) {
   final seen = <String>{};
   return [

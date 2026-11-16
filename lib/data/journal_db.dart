@@ -4,12 +4,9 @@ import 'package:sqlite3/sqlite3.dart';
 
 import 'journal_codec.dart';
 
-/// Document rows in journal.db. Private to [JournalStore]: it stores and
-/// returns raw JSON docs and knows nothing of the domain.
 final class JournalDb {
   JournalDb._(this._db);
 
-  /// Ordered table-shape scripts. Index i takes `user_version` i to i+1.
   static const _schema = [
     '''
     CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -67,7 +64,6 @@ final class JournalDb {
     );
   }
 
-  /// Applies every row change in one transaction: all of them or none.
   void write(RowChanges c) => _transaction(() {
     for (final (id, doc) in c.putWines) {
       _db.execute('INSERT OR REPLACE INTO wines VALUES (?, ?)', [
@@ -96,7 +92,6 @@ final class JournalDb {
     }
   });
 
-  /// Deletes every row and inserts [rows] at the current doc version.
   void replaceAll(RowChanges rows) => _transaction(() {
     _db.execute('DELETE FROM tastings');
     _db.execute('DELETE FROM wishlist');
@@ -125,7 +120,6 @@ final class JournalDb {
   void close() => _db.close();
 }
 
-/// Rows to write, keyed as the tables are.
 final class RowChanges {
   RowChanges({
     this.putWines = const [],

@@ -47,8 +47,6 @@ const _destinations = <_Destination>[
   ),
 ];
 
-/// Five top-level destinations: a navigation bar on phones, a rail on
-/// expanded widths. Each destination keeps its scroll state while away.
 class Shell extends StatefulWidget {
   const Shell({super.key});
 

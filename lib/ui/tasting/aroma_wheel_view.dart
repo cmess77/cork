@@ -30,8 +30,6 @@ typedef CategoryArc = ({
   List<SubcategoryArc> subcategories,
 });
 
-/// Every descriptor gets the same slice, so a category's wedge is as wide as
-/// its vocabulary.
 final List<CategoryArc> _arcs = () {
   final slice = 2 * pi / aromaWheel.descriptors.length;
   var index = 0;
@@ -54,13 +52,10 @@ final List<CategoryArc> _arcs = () {
   return out;
 }();
 
-/// Ring radii as fractions of the wheel radius: hub, category, subcategory,
-/// descriptor.
 const _hub = 0.32;
 const _categoryOuter = 0.54;
 const _subcategoryOuter = 0.75;
 
-/// Where things sit on a wheel drawn into a square of [size].
 final class AromaWheelGeometry {
   const AromaWheelGeometry(this.size);
   final Size size;
@@ -83,7 +78,6 @@ final class AromaWheelGeometry {
     return null;
   }
 
-  /// The middle of [family]'s segment in the category ring.
   Offset anchorOf(AromaFamily family) {
     final arc = _arcs.firstWhere((c) => c.family == family).arc;
     final angle = arc.start + arc.sweep / 2 - pi / 2;
@@ -92,9 +86,6 @@ final class AromaWheelGeometry {
   }
 }
 
-/// The aroma wheel as a reference: the current category and every selected
-/// descriptor in full colour, everything else dimmed. Tapping a wedge reports
-/// its category.
 class AromaWheelView extends StatelessWidget {
   const AromaWheelView({
     super.key,

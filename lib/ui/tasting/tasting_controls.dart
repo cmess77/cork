@@ -9,7 +9,6 @@ import '../../domain/wine.dart';
 import '../theme/cork_theme.dart';
 import '../widgets/chalk.dart';
 
-/// The glass family a new tasting starts on, from the wine's type.
 GlassFamily glassFamilyFor(WineType? type) => switch (type) {
   WineType.red || WineType.fortified => GlassFamily.red,
   WineType.rose => GlassFamily.rose,
@@ -19,8 +18,6 @@ GlassFamily glassFamilyFor(WineType? type) => switch (type) {
   null => GlassFamily.white,
 };
 
-/// Overall score: the Display numeral, a 0.1-step slider, and minus and plus
-/// buttons for exact entry. Unset, the thumb rests at 3.0 in chalk grey.
 class ScoreInput extends StatelessWidget {
   const ScoreInput({super.key, required this.score, required this.onChanged});
   final Score? score;
@@ -107,8 +104,6 @@ class ScoreInput extends StatelessWidget {
   }
 }
 
-/// A 1 to 5 rating as five 48dp chalk dots. Tapping the current value again
-/// clears it.
 class StarDots extends StatelessWidget {
   const StarDots({
     super.key,
@@ -163,9 +158,6 @@ class StarDots extends StatelessWidget {
   }
 }
 
-/// An optional ordinal scale. Segmented buttons when every label fits at
-/// 12sp; otherwise a labelled discrete slider. Tapping the selected segment
-/// clears it.
 class OrdinalPicker<T> extends StatelessWidget {
   const OrdinalPicker({
     super.key,
@@ -176,7 +168,6 @@ class OrdinalPicker<T> extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// Names the scale for screen readers.
   final String label;
   final List<T> values;
   final String Function(T) labelOf;
@@ -185,7 +176,6 @@ class OrdinalPicker<T> extends StatelessWidget {
 
   static const _segmentPadding = CorkSpace.sm;
 
-  /// Border and label slack inside one segment, beyond its padding.
   static const _segmentSlack = CorkSpace.sm;
 
   bool _fits(BuildContext context, TextStyle style, double width) {
@@ -316,7 +306,6 @@ class _SliderScale<T> extends StatelessWidget {
   }
 }
 
-/// A single-choice segmented row that always has a value.
 class ChoiceSegments<T> extends StatelessWidget {
   const ChoiceSegments({
     super.key,
@@ -343,8 +332,6 @@ class ChoiceSegments<T> extends StatelessWidget {
   );
 }
 
-/// The GLASS section body: family, that family's hues as swatches at the
-/// chosen intensity, intensity, and the WSET phrase.
 class GlassPicker extends StatelessWidget {
   const GlassPicker({
     super.key,
@@ -472,7 +459,6 @@ class _SwatchChoice extends StatelessWidget {
   }
 }
 
-/// A year field with an NV chip beside it; NV disables the year.
 class VintageField extends StatelessWidget {
   const VintageField({
     super.key,
@@ -524,7 +510,6 @@ class VintageField extends StatelessWidget {
   );
 }
 
-/// A read-only field that opens a picker, styled like the text fields.
 class PickerField extends StatelessWidget {
   const PickerField({
     super.key,
@@ -558,7 +543,6 @@ class PickerField extends StatelessWidget {
   );
 }
 
-/// A text button on the slate app bar, which stays slate in both themes.
 ButtonStyle shellTextButtonStyle(BuildContext context) {
   final cork = Theme.of(context).cork;
   return TextButton.styleFrom(
@@ -567,7 +551,6 @@ ButtonStyle shellTextButtonStyle(BuildContext context) {
   );
 }
 
-/// A board-headed form section with the gutter applied to its body.
 class FormSection extends StatelessWidget {
   const FormSection(this.heading, {super.key, required this.child});
   final String heading;

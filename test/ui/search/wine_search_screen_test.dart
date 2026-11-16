@@ -31,7 +31,6 @@ final online = Wine(
   type: WineType.rose,
 );
 
-/// Holds each suggest call open until the test answers it.
 final class GatedLookup implements WineLookup {
   GatedLookup(this.index);
   final List<Wine> index;
@@ -54,7 +53,6 @@ final class GatedLookup implements WineLookup {
   Future<void> close() async {}
 }
 
-/// A page that opens [screen], so tests can see search close behind itself.
 class Launcher extends StatelessWidget {
   const Launcher(this.screen, {super.key});
   final Widget screen;

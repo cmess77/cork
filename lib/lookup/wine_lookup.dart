@@ -7,9 +7,6 @@ import '../domain/wine.dart';
 import 'open_food_facts.dart';
 import 'wine_index.dart';
 
-/// Finds wines. Hides the bundled index, Open Food Facts, the journal's own
-/// wines, FTS syntax, HTTP, rate limiting, and asset installation.
-/// Results are domain [Wine]s whose ids derive from provenance.
 abstract interface class WineLookup {
   /// As-you-type. Never touches the network and never throws on any input.
   /// Journal wines come first (most recent activity first), then index hits
@@ -46,8 +43,6 @@ final class OnlineUnavailable extends OnlineResult {
   const OnlineUnavailable();
 }
 
-/// The app's [WineLookup]: the bundled index on a background isolate, the
-/// journal's own wines, and Open Food Facts.
 final class BundledWineLookup implements WineLookup {
   BundledWineLookup._(this._index, this._online, this._journal);
 
@@ -109,8 +104,6 @@ final class BundledWineLookup implements WineLookup {
   }
 }
 
-/// Every typed word must start some word of the wine's name, winery, grapes,
-/// or region, the same rule the index's prefix query applies.
 bool _matches(Wine wine, List<String> words) {
   final haystack = [
     ...foldedWords(wine.name),

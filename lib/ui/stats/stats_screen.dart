@@ -190,7 +190,6 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
   );
 }
 
-/// Count order is the domain's own (count, then mean, then key).
 List<GroupStat> _sorted(List<GroupStat> groups, _Sort sort) => switch (sort) {
   _Sort.count => groups,
   _Sort.average =>
@@ -239,7 +238,6 @@ class _CardNote extends StatelessWidget {
   );
 }
 
-/// One stats block: a card inside the gutter, with an optional title.
 class _Block extends StatelessWidget {
   const _Block({required this.child, this.title});
   final Widget child;
@@ -270,7 +268,6 @@ class _SummaryCard extends StatelessWidget {
   const _SummaryCard(this.stats, this.glasses);
   final JournalStats stats;
 
-  /// The period's tastings, oldest first.
   final List<Entry> glasses;
 
   @override

@@ -50,9 +50,6 @@ Future<String> installWineIndex(
   return target.path;
 }
 
-/// The index's unicode61 tokenizer treats everything but letters, digits, and
-/// marks as a separator, so splitting here the same way keeps journal matching
-/// and the name-prefix tier in step with what FTS matched.
 final _separators = RegExp(r'[^\p{L}\p{N}\p{M}]+', unicode: true);
 
 /// Words of [text] after [fold], two or more characters each.
@@ -61,12 +58,10 @@ List<String> foldedWords(String text) => [
     if (w.runes.length >= 2) w,
 ];
 
-/// User text made safe for MATCH: 'chât "marg' becomes '"chât"* "marg"*'.
 final class FtsQuery {
   FtsQuery._(this.tokens);
 
-  /// Null when no token has two or more characters, because the index only
-  /// keeps prefixes of two and three characters.
+  /// Null when no token has two or more characters.
   static FtsQuery? parse(String userText) {
     final tokens = [
       for (final t in userText.toLowerCase().split(_separators))
@@ -76,8 +71,7 @@ final class FtsQuery {
   }
 
   /// Lower case but not folded: the index removes diacritics itself, and
-  /// folding 'ß' to 'ss' here would stop it matching. Tokens hold only
-  /// letters, digits, and marks, so quoting them cannot be broken out of.
+  /// folding 'ß' to 'ss' here would stop it matching.
   final List<String> tokens;
 
   String get match => tokens.map((t) => '"$t"*').join(' ');
@@ -89,14 +83,9 @@ const _searchSql =
     'ORDER BY bm25(wines_fts, 10.0, 6.0, 3.0, 2.0) '
     'LIMIT ?2';
 
-/// bm25 ranks 'Margaux du Château Margaux' above 'Château Margaux' for
-/// "chateau marg". Names that start with the typed words are promoted out of
-/// this many top rows; bm25 scores every match regardless of LIMIT, so a wide
-/// window costs little.
+/// bm25 scores every match regardless of LIMIT, so a wide window costs little.
 const _rerankWindow = 200;
 
-/// The installed index, opened read-only. Synchronous: only [IndexWorker]'s
-/// isolate calls it on device.
 final class WineIndex {
   WineIndex._(this._db, this._search);
 
@@ -198,9 +187,6 @@ const _acidities = {
   'High': Level.high,
 };
 
-/// Owns the index connection on a long-lived background isolate, so the UI
-/// isolate never runs SQL. Requests carry an id because replies to
-/// overlapping keystrokes share one port.
 final class IndexWorker {
   IndexWorker._() {
     _replies.handler = _onReply;

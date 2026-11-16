@@ -7,8 +7,6 @@ import 'search/wine_search_screen.dart';
 import 'tasting/cork_route.dart';
 import 'wine/wine_detail_screen.dart';
 
-/// Cross-screen navigation, so a screen never imports another screen's
-/// internals to open it.
 Future<void> openFilteredFeed(BuildContext context, FeedFilter filter) =>
     Navigator.push<void>(
       context,
@@ -21,7 +19,6 @@ Future<void> openWine(BuildContext context, WineId id, {TastingId? expand}) =>
       corkRoute(context, (_) => WineDetailScreen(id: id, expand: expand)),
     );
 
-/// Step one of logging: wine search, which opens the tasting form on a pick.
 Future<void> logGlass(BuildContext context) => Navigator.push<void>(
   context,
   corkRoute(context, (_) => const WineSearchScreen()),

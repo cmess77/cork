@@ -8,7 +8,6 @@ import '../../domain/wine.dart';
 import '../theme/cork_theme.dart';
 import '../theme/glass_colors.dart';
 
-/// Board heading: condensed caps, the cellar-door chalkboard's sign-writing.
 class BoardHeading extends StatelessWidget {
   const BoardHeading(this.text, {super.key, this.padding});
   final String text;
@@ -34,7 +33,6 @@ class BoardHeading extends StatelessWidget {
   );
 }
 
-/// A score chalked in yellow: tabular figures, meant to sit right-aligned.
 class ScoreText extends StatelessWidget {
   const ScoreText(this.score, {super.key, this.style});
   final Score score;
@@ -49,7 +47,6 @@ class ScoreText extends StatelessWidget {
   );
 }
 
-/// The colour a wine type uses in stats and search rows.
 Color typeSeriesColor(BuildContext context, WineType type) {
   final t = Theme.of(context).cork;
   return switch (type) {
@@ -77,8 +74,6 @@ class TypeDot extends StatelessWidget {
   );
 }
 
-/// A 48dp tablecloth disc with the glass colour inside, so colour is judged
-/// against white the WSET way. Water-white needs the hairline to read.
 class GlassSwatch extends StatelessWidget {
   const GlassSwatch(
     this.color, {
@@ -120,9 +115,6 @@ class GlassSwatch extends StatelessWidget {
   }
 }
 
-/// The signature: a dry-brush stroke in the tasting's glass colour, seeded
-/// from the tasting id so it is stable across rebuilds. When [drawIn] is set
-/// it draws left to right once; with animations off it appears complete.
 class ChalkSwipe extends StatefulWidget {
   const ChalkSwipe({
     super.key,
@@ -224,8 +216,6 @@ class _SwipePainter extends CustomPainter {
       );
     }
 
-    // Thin horizontal strands with ragged ends read as dry brush; a few
-    // strands stop short to leave the gaps chalk leaves.
     const strands = 6;
     final strandH = h / strands;
     for (var i = 0; i < strands; i++) {
@@ -256,7 +246,6 @@ class _SwipePainter extends CustomPainter {
       old.underlay != underlay;
 }
 
-/// FNV-1a, so a swipe looks the same on every launch and device.
 int _stableHash(String s) {
   var h = 0x811c9dc5;
   for (final unit in s.codeUnits) {

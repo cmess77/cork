@@ -12,7 +12,6 @@ import '../theme/cork_theme.dart';
 import '../widgets/chalk.dart';
 import '../widgets/tasting_row.dart';
 
-/// One Material Symbol per rule id; an unknown rule gets the medal.
 IconData badgeIcon(String ruleId) => switch (ruleId) {
   'first' => Icons.wine_bar_rounded,
   't10' => Icons.liquor_rounded,
@@ -62,8 +61,6 @@ class BadgesScreen extends ConsumerWidget {
   }
 }
 
-/// Two columns; each row is as tall as its taller card, so long rules and
-/// large font scales never clip.
 class _BadgeGrid extends StatelessWidget {
   const _BadgeGrid(this.statuses);
   final List<BadgeStatus> statuses;
@@ -134,7 +131,6 @@ class _BadgeCard extends StatelessWidget {
   }
 }
 
-/// "Earned Nov 3, 2026", or a progress bar over "7 of 10".
 class _StatusLine extends StatelessWidget {
   const _StatusLine(this.status);
   final BadgeStatus status;
@@ -169,8 +165,6 @@ class _StatusLine extends StatelessWidget {
   }
 }
 
-/// A 48dp chalk ring with the rule's symbol: solid in chalk yellow once
-/// earned, dashed and grey while locked.
 class BadgeMark extends StatelessWidget {
   const BadgeMark(this.status, {super.key});
   final BadgeStatus status;
@@ -259,8 +253,6 @@ void _openSheet(BuildContext context, String ruleId) {
   );
 }
 
-/// The badge, its rule, and the tastings that count toward it. Watches the
-/// badges so an edit elsewhere re-derives what it shows.
 class _BadgeSheet extends ConsumerWidget {
   const _BadgeSheet({
     required this.ruleId,

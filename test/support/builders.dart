@@ -55,7 +55,6 @@ Tasting tasting(
   );
 }
 
-/// A journal holding [tastings] and the wines they reference.
 Journal journalOf(List<(Wine, Tasting)> pairs) => Journal.empty.apply([
   for (final (wine, t) in pairs) ...[AdoptWine(wine), SaveTasting(t)],
 ]);

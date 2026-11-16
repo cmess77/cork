@@ -1,7 +1,3 @@
-// As-you-type latency of the real lookup on device: index installed under
-// app-support, served by the background isolate, with an empty journal.
-//   flutter test integration_test/lookup_latency_test.dart -d emulator-5554
-
 import 'package:cork/domain/journal.dart';
 import 'package:cork/lookup/wine_index.dart';
 import 'package:cork/lookup/wine_lookup.dart';
@@ -49,7 +45,6 @@ void main() {
         final clock = Stopwatch()..start();
         final hits = await lookup.suggest(text);
         samples.add(clock.elapsedMicroseconds);
-        // suggest swallows index failures, which would time as fast blanks.
         if (text.length > 1) expect(hits, isNotEmpty, reason: text);
       }
     }

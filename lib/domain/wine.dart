@@ -1,8 +1,6 @@
 import 'ids.dart';
 import 'scales.dart';
 
-/// Matches the bundled index's `type` column; 'Dessert/Port' is [fortified].
-/// Stats and the every-type badge use these six values as the type groups.
 enum WineType {
   red('Red'),
   white('White'),
@@ -36,7 +34,6 @@ final class EnteredByHand extends Provenance {
 final class Country {
   const Country(this.code, this.name);
 
-  /// ISO 3166-1 alpha-2 as the index gives it, or null for hand-typed names.
   final String? code;
   final String name;
 
@@ -48,9 +45,6 @@ final class Country {
   int get hashCode => Object.hash(code, name);
 }
 
-/// A label, not a bottle. Vintage lives on Tasting and WishlistItem, because
-/// the index is vintage-agnostic and "unique wines" must not split by year.
-///
 /// Invariant: [id] derives from [provenance] (random for [EnteredByHand]).
 final class Wine {
   const Wine({
@@ -98,7 +92,6 @@ final class Wine {
   final Country? country;
   final double? abv;
 
-  /// Index hints that prefill the structure fields of a new tasting.
   final Level? typicalBody;
   final Level? typicalAcidity;
 

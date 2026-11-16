@@ -17,8 +17,6 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 
-/// Answers suggest from a fixed list by folded substring; online search
-/// returns [online].
 final class FakeWineLookup implements WineLookup {
   FakeWineLookup(this.index, {this.online = const OnlineUnavailable()});
   final List<Wine> index;
@@ -42,7 +40,6 @@ final class FakeWineLookup implements WineLookup {
   Future<void> close() async {}
 }
 
-/// Real stores on a temp directory, a fake lookup, and the Cork theme.
 final class Harness {
   Harness._(this.dir, this.store, this.photos, this.settings, this.lookup)
     : backup = Backup(
@@ -90,7 +87,6 @@ final class Harness {
     settingsStoreProvider.overrideWithValue(settings),
   ];
 
-  /// Pumps [child] (default: the whole app body) inside the providers.
   Widget wrap(Widget child, {ThemeData? theme}) => ProviderScope(
     overrides: overrides,
     child: MaterialApp(theme: theme ?? CorkTheme.dark, home: child),

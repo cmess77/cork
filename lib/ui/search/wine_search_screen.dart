@@ -16,12 +16,10 @@ import '../theme/cork_theme.dart';
 import '../widgets/chalk.dart';
 import 'manual_wine_screen.dart';
 
-/// What picking a wine does: open the tasting form, or add to the wishlist.
 enum SearchMode { log, wishlist }
 
 typedef PickedWine = ({Wine wine, Vintage? vintage});
 
-/// Opens search to swap the wine of a tasting form that is already open.
 /// Resolves to the chosen wine, or null when the user backs out.
 Future<PickedWine?> pickWine(BuildContext context) => Navigator.push(
   context,
@@ -30,9 +28,6 @@ Future<PickedWine?> pickWine(BuildContext context) => Navigator.push(
 
 enum _Purpose { log, wishlist, pick }
 
-/// Step one of logging, and Wishlist's "Add a wine": as-you-type matches from
-/// the journal and the bundled index, online search on request, and manual
-/// entry. Pops once the picked wine has been used.
 class WineSearchScreen extends ConsumerStatefulWidget {
   const WineSearchScreen({super.key, this.mode = SearchMode.log})
     : _purpose = mode == SearchMode.log ? _Purpose.log : _Purpose.wishlist;
@@ -48,8 +43,6 @@ class WineSearchScreen extends ConsumerStatefulWidget {
   ConsumerState<WineSearchScreen> createState() => _WineSearchState();
 }
 
-/// Online search runs only on a tap, so its state is separate from the
-/// as-you-type results and is reset by any edit to the query.
 sealed class _Online {
   const _Online();
 }
@@ -75,7 +68,6 @@ class _WineSearchState extends ConsumerState<WineSearchScreen> {
   _Online _online = const _NotAsked();
   PickedWine? _picked;
 
-  // Keystrokes are numbered so a slow answer never replaces a newer one.
   var _sent = 0;
   var _shown = 0;
 
@@ -131,8 +123,6 @@ class _WineSearchState extends ConsumerState<WineSearchScreen> {
         _Answered(:final result) => result is! OnlineHits,
       };
 
-  /// Uses [hit] for this screen's purpose. True when it was used and the
-  /// search should close.
   Future<bool> _use(BuildContext from, Wine hit, Vintage? vintage) async {
     final store = ref.read(journalStoreProvider);
     final wine = store.journal.wines[hit.id] ?? hit;
@@ -323,13 +313,11 @@ class _WineSearchState extends ConsumerState<WineSearchScreen> {
   }
 }
 
-/// Folded query words, for bolding the matched start of each name word.
 List<String> _words(String query) =>
     fold(query).split(' ').where((w) => w.isNotEmpty).toList();
 
 final _wordPattern = RegExp(r'[\p{L}\p{N}]+', unicode: true);
 
-/// [name] with the start of each word that a typed word matches in [bold].
 List<TextSpan> _highlight(String name, List<String> words, TextStyle bold) {
   final spans = <TextSpan>[];
   var at = 0;
@@ -346,8 +334,6 @@ List<TextSpan> _highlight(String name, List<String> words, TextStyle bold) {
   return spans;
 }
 
-/// How many characters of [word] the longest matching typed word covers.
-/// Counted on the original spelling, since folding can lengthen 'ß' or 'æ'.
 int _matchedLength(String word, List<String> words) {
   final folded = fold(word);
   var best = 0;

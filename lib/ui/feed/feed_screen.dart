@@ -15,9 +15,6 @@ import '../theme/cork_theme.dart';
 import '../widgets/chalk.dart';
 import '../widgets/tasting_row.dart';
 
-/// The journal: every tasting newest first, grouped by month and narrowed by
-/// one [FeedFilter]. The shell's copy starts unfiltered; Stats pushes one
-/// that starts on a breakdown group.
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key, this.initialFilter = FeedFilter.none});
   final FeedFilter initialFilter;
@@ -28,7 +25,6 @@ class FeedScreen extends ConsumerStatefulWidget {
 
 enum _RowAction { edit, delete }
 
-/// One removable chip: what it says, and the filter without it.
 typedef _Refinement = ({String label, FeedFilter without});
 
 class _FeedScreenState extends ConsumerState<FeedScreen> {
@@ -308,7 +304,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   );
 }
 
-/// Every key [d] takes across the journal, in the dimension's own order.
 List<GroupKey> _keysOf(Journal journal, Dimension d) =>
     {for (final e in journal.feed) ...d.keysOf(e)}.toList()
       ..sort((a, b) => a.sortKey.compareTo(b.sortKey));
@@ -449,8 +444,6 @@ class _FilteredEmpty extends StatelessWidget {
   }
 }
 
-/// Type, score range, date range, and country. Applies each change as it is
-/// made, so the feed behind the sheet narrows live.
 class _FilterSheet extends StatefulWidget {
   const _FilterSheet({
     required this.initial,

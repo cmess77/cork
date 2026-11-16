@@ -4,14 +4,9 @@ import '../domain/journal.dart';
 import 'journal_codec.dart';
 import 'journal_db.dart';
 
-/// The only writer of journal.db and the only holder of the current
-/// [Journal]. Listenable, so providers and widgets can observe commits.
 final class JournalStore extends ChangeNotifier {
   JournalStore._(this._db, this._journal);
 
-  /// Synchronous: creates the schema, upgrades stored docs if their version
-  /// is behind (after handing the old docs to [beforeUpgrade] for a safety
-  /// backup, then rewriting every row in one transaction), then loads.
   static JournalStore open(
     String dbPath, {
     required void Function(int fromVersion, RawDocs docs) beforeUpgrade,
@@ -39,9 +34,6 @@ final class JournalStore extends ChangeNotifier {
 
   Journal get journal => _journal;
 
-  /// Applies [changes] to the current value, writes the touched rows in one
-  /// SQL transaction, then swaps the value and notifies. Synchronous, so two
-  /// commits cannot interleave. A crash before COMMIT leaves nothing behind.
   Journal commit(List<JournalChange> changes) {
     final before = _journal;
     final after = before.apply(changes);
@@ -52,7 +44,6 @@ final class JournalStore extends ChangeNotifier {
     return after;
   }
 
-  /// Import: deletes every row and inserts [next] in one transaction.
   void replaceAll(Journal next) {
     _db.replaceAll(_rowsOf(next));
     _journal = next;
@@ -66,8 +57,6 @@ final class JournalStore extends ChangeNotifier {
   }
 }
 
-/// [Journal.apply] keeps unchanged records identical, so identity tells
-/// exactly which rows a commit touched.
 RowChanges _diff(Journal a, Journal b) => RowChanges(
   putWines: [
     for (final w in b.wines.values)

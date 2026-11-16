@@ -4,7 +4,6 @@ import 'journal.dart';
 import 'scales.dart';
 import 'wine.dart';
 
-/// Count and mean overall score of a set of tastings.
 final class Tally {
   const Tally(this.count, this.tenthsSum);
   static const zero = Tally(0, 0);
@@ -28,7 +27,6 @@ final class GroupStat {
 typedef MonthTally = ({DateTime month, Tally tally});
 typedef WineTally = ({Wine wine, Tally tally});
 
-/// A half-point bin of the score histogram: [from] inclusive, in tenths.
 typedef ScoreBin = ({int fromTenths, int count});
 
 final class JournalStats {
@@ -59,8 +57,6 @@ final class JournalStats {
   final Map<Sweetness, int> sweetness;
 }
 
-/// Takes entries, not a Journal, so one function serves the whole journal
-/// and any filtered slice.
 JournalStats computeStats(Iterable<Entry> entries) {
   var overall = Tally.zero;
   final wines = <WineId, Wine>{};

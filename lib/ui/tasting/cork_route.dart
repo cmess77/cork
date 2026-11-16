@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// A full-screen page route that cuts instantly when Remove animations is on.
 Route<T> corkRoute<T>(BuildContext context, WidgetBuilder builder) =>
     _CorkRoute<T>(
       builder: builder,

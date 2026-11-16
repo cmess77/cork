@@ -18,12 +18,8 @@ final class WishlistItem {
   final String note;
 }
 
-/// A tasting joined to its wine. What every derivation iterates.
 typedef Entry = ({Tasting tasting, Wine wine});
 
-/// The whole journal as one immutable value. Everything else on this class is
-/// a view derived from the three maps, computed once per value.
-///
 /// Invariant: every `Tasting.wineId` and every wishlist key is a key of [wines].
 final class Journal {
   Journal(
@@ -59,8 +55,7 @@ final class Journal {
   List<Tasting> tastingsOf(WineId id) => _byWine[id] ?? const [];
 
   /// Every wine in the journal, most recent activity (tasting or wishlist
-  /// add) first. Wines with no activity left keep their place at the end, so
-  /// hand-entered and online wines can still be found again.
+  /// add) first. Wines with no activity left keep their place at the end.
   late final List<Wine> recentWines = () {
     final last = <WineId, DateTime>{};
     void touch(WineId id, DateTime at) {
@@ -85,7 +80,7 @@ final class Journal {
 
   /// Pure reducer. Every change is an upsert or a delete by id, so applying a
   /// change twice equals applying it once. Throws [StateError] when a change
-  /// names a wine that is absent: a programming error, not user input.
+  /// names a wine that is absent.
   Journal apply(Iterable<JournalChange> changes) {
     final wines = {...this.wines};
     final tastings = {...this.tastings};
@@ -137,14 +132,11 @@ final class AdoptWine extends JournalChange {
   final Wine wine;
 }
 
-/// Replaces a wine already in the journal.
 final class EditWine extends JournalChange {
   const EditWine(this.wine);
   final Wine wine;
 }
 
-/// Creates or edits a tasting. [removeFromWishlist] takes the wine off the
-/// wishlist in the same commit.
 final class SaveTasting extends JournalChange {
   const SaveTasting(this.tasting, {this.removeFromWishlist = false});
   final Tasting tasting;

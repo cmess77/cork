@@ -25,7 +25,6 @@ final class ImportRejected extends ImportPreview {
   final ImportProblem problem;
 }
 
-/// A parsed backup waiting for the user to confirm the replace.
 final class Incoming {
   const Incoming._(this.journal, this._source, this._zipped);
   final Journal journal;
@@ -36,7 +35,6 @@ final class Incoming {
 sealed class ImportProblem {
   const ImportProblem();
 
-  /// What the snackbar says.
   String get message;
 }
 
@@ -62,7 +60,6 @@ final class BackupDamaged extends ImportProblem {
   String get message => 'That backup is damaged ($path: $detail).';
 }
 
-/// Whole-journal export and import, and CSV export of tastings.
 final class Backup {
   Backup({
     required this.store,
@@ -81,8 +78,6 @@ final class Backup {
   static const journalEntry = 'journal.json';
   static const photosPrefix = 'photos/';
 
-  /// A `.cork` zip: `journal.json` plus every referenced photo, streamed one
-  /// file at a time so a large photo library never sits in memory.
   Future<File> exportCork({String prefix = 'cork'}) async {
     final file = await _target('$prefix-${_stamp()}.cork');
     final zip = ZipFileEncoder()..create(file.path);
@@ -100,7 +95,6 @@ final class Backup {
     return file;
   }
 
-  /// The same `journal.json`, without photos.
   Future<File> exportJson() async {
     final file = await _target('cork-${_stamp()}.json');
     await file.writeAsString(_journalText(), flush: true);
@@ -113,7 +107,6 @@ final class Backup {
     return file;
   }
 
-  /// Parses a picked file without touching the journal.
   Future<ImportPreview> preview(String path) async {
     final Object? json;
     final bool zipped;
@@ -149,9 +142,6 @@ final class Backup {
     };
   }
 
-  /// 1. Writes a safety `.cork` of the current journal and returns it.
-  /// 2. Stores the incoming photos (content-addressed, so a rerun is harmless).
-  /// 3. Replaces the journal in one transaction.
   Future<File> restore(Incoming incoming) async {
     final safety = await exportCork(prefix: 'pre-import');
     if (incoming._zipped) {
@@ -240,7 +230,7 @@ const csvColumns = [
   'currency',
 ];
 
-/// One row per tasting, newest first, wine columns flattened. RFC 4180.
+/// RFC 4180.
 String tastingsCsv(Journal journal) {
   final out = StringBuffer()..write('${csvColumns.join(',')}\r\n');
   for (final (:tasting, :wine) in journal.feed) {

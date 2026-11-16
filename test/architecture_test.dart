@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Import rules from the architecture sketch, checked over import lines.
 void main() {
   final imports = RegExp(r'''^import\s+['"]([^'"]+)['"]''', multiLine: true);
 

@@ -1,4 +1,3 @@
-/// WSET Systematic Approach colour families for a glass of wine.
 enum GlassFamily {
   white('White'),
   rose('Rosé'),
@@ -11,7 +10,6 @@ enum GlassFamily {
       GlassHue.values.where((h) => h.family == this).toList(growable: false);
 }
 
-/// WSET intensity, judged by tilting the glass over a white surface.
 enum GlassIntensity {
   pale('Pale'),
   medium('Medium'),
@@ -21,8 +19,6 @@ enum GlassIntensity {
   final String label;
 }
 
-/// One flat scale: a hue owns its family, so "ruby white" cannot be written.
-/// [argb] is the medium-intensity display colour over a white tablecloth.
 enum GlassHue {
   waterWhite(GlassFamily.white, 'Water-white', 0xFFF1F0DE),
   greenYellow(GlassFamily.white, 'Green-yellow', 0xFFE3E59A),
@@ -55,7 +51,6 @@ final class GlassColor {
 
   GlassFamily get family => hue.family;
 
-  /// The WSET phrase, such as "Medium ruby".
   String get phrase => '${intensity.label} ${hue.label.toLowerCase()}';
 
   @override

@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import '../../domain/glass_color.dart';
 import 'glass_colors.dart';
 
-/// The bundled Sofia Sans superfamily. The files are variable fonts, so each
-/// weight is also set on the `wght` axis. Change weight with [withWeight].
 abstract final class CorkFonts {
   static const sansFamily = 'Sofia Sans';
   static const condensedFamily = 'Sofia Sans Condensed';

@@ -15,7 +15,6 @@ void tallView(WidgetTester tester) {
   addTearDown(tester.view.reset);
 }
 
-/// [text] inside the badge card titled [title].
 Finder inCard(String title, String text) => find.descendant(
   of: find.ancestor(of: find.text(title), matching: find.byType(Card)),
   matching: find.text(text),
@@ -24,7 +23,6 @@ Finder inCard(String title, String text) => find.descendant(
 final hermitage = indexWine(1, name: 'Hermitage');
 final barolo = indexWine(2, name: 'Barolo', grapes: ['Nebbiolo']);
 
-// Noon local time stays on the same calendar day in every timezone.
 final nov3 = DateTime(2026, 11, 3, 12).toUtc();
 
 void main() {
@@ -76,8 +74,6 @@ void main() {
     tester,
   ) async {
     tallView(tester);
-    // A colourless ChalkSwipe throws on unmount (lazy controller in
-    // chalk.dart), so these tastings carry a glass colour.
     const ruby = GlassColor(GlassHue.ruby, GlassIntensity.medium);
     final h = Harness.create(
       journal: journalOf([

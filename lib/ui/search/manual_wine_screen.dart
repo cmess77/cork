@@ -12,14 +12,11 @@ import '../theme/cork_theme.dart';
 import '../widgets/chalk.dart';
 import 'wine_countries.dart';
 
-/// What happens to a newly entered wine: the caller logs it, wishlists it,
-/// or hands it back. Resolves true when the wine was used, which closes the
+/// Resolves true when the wine was used, which closes the
 /// form; false leaves the form open with its fields intact.
 typedef WineCreated =
     Future<bool> Function(BuildContext context, Wine wine, Vintage? vintage);
 
-/// Hand entry of a wine the index and Open Food Facts do not have, or an edit
-/// of a wine already in the journal.
 class ManualWineScreen extends ConsumerStatefulWidget {
   const ManualWineScreen({
     super.key,
@@ -42,8 +39,6 @@ class ManualWineScreen extends ConsumerStatefulWidget {
 }
 
 class _ManualWineState extends ConsumerState<ManualWineScreen> {
-  // One id per form, so going back from the tasting form and saving again
-  // still describes the same wine.
   late final _id = widget.editing?.id ?? WineId.mintManual();
   late final _name = TextEditingController(
     text: widget.editing?.name ?? widget.initialName,

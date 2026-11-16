@@ -34,9 +34,7 @@ class _DescriptorPicker extends StatefulWidget {
 
 class _DescriptorPickerState extends State<_DescriptorPicker>
     with SingleTickerProviderStateMixin {
-  // Ids this build does not know stay in the set, so an edit never drops them.
   late var _selected = Set<DescriptorId>.unmodifiable(widget.initial);
-  // First read during build, so the Remove animations setting is in scope.
   late final _tabs = TabController(
     length: aromaWheel.categories.length,
     vsync: this,
@@ -214,7 +212,6 @@ class _DescriptorPickerState extends State<_DescriptorPicker>
   }
 }
 
-/// Board-headed groups of descriptor chips.
 class _ChipList extends StatelessWidget {
   const _ChipList({
     required this.sections,

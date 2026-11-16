@@ -19,31 +19,25 @@ String fullDate(DateTime t) => _dayYear.format(t.toLocal());
 
 String timeLabel(DateTime t) => _time.format(t.toLocal());
 
-/// "NOVEMBER 2026": a board heading, so caps.
 String monthHeading(DateTime t) => _month.format(t.toLocal()).toUpperCase();
 
-/// "Winery · 2019", "Winery · NV", or whichever parts are known.
 String wineryAndVintage(Wine wine, Vintage? vintage) =>
     [wine.winery, vintage?.format()].whereType<String>().join(' · ');
 
-/// "Region, Country".
 String placeOf(Wine wine) =>
     [wine.region, wine.country?.name].whereType<String>().join(', ');
 
-/// "Winery · Region, Country".
 String wineSubtitle(Wine wine) => [
   wine.winery,
   placeOf(wine),
 ].where((s) => s != null && s.isNotEmpty).join(' · ');
 
-/// "Nov 12 · Bar Brutal".
 String whenAndWhere(Tasting t) =>
     [dayLabel(t.tastedAt), t.place].whereType<String>().join(' · ');
 
 String countLabel(int n, String one, [String? many]) =>
     '$n ${n == 1 ? one : (many ?? '${one}s')}';
 
-/// "128 tastings · 97 wines · avg 3.8".
 String summaryLine(int tastings, int wines, double mean) => [
   countLabel(tastings, 'tasting'),
   countLabel(wines, 'wine'),

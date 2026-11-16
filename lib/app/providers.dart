@@ -12,7 +12,6 @@ import '../domain/journal.dart';
 import '../domain/stats.dart';
 import '../lookup/wine_lookup.dart';
 
-/// Overridden in `main.dart` and in widget tests.
 final journalStoreProvider = Provider<JournalStore>(
   (_) => throw UnimplementedError('journalStoreProvider'),
 );
@@ -29,7 +28,6 @@ final settingsStoreProvider = Provider<SettingsStore>(
   (_) => throw UnimplementedError('settingsStoreProvider'),
 );
 
-/// Rebuilds its watchers whenever [notifier] notifies.
 T _follow<T>(Ref ref, Listenable notifier, T value) {
   void changed() => ref.invalidateSelf();
   notifier.addListener(changed);
@@ -37,7 +35,6 @@ T _follow<T>(Ref ref, Listenable notifier, T value) {
   return value;
 }
 
-/// The current journal value. Rebuilds when the store commits.
 final journalProvider = Provider<Journal>((ref) {
   final store = ref.watch(journalStoreProvider);
   return _follow(ref, store, store.journal);
@@ -58,7 +55,6 @@ final badgesProvider = Provider<List<BadgeStatus>>(
   (ref) => deriveBadges(ref.watch(journalProvider).feed),
 );
 
-/// The stats screen's period.
 enum StatsRange {
   days30('30 days'),
   months12('12 months'),
@@ -82,8 +78,6 @@ final statsProvider = Provider.family<JournalStats, StatsRange>((ref, range) {
   );
 });
 
-/// The tasting saved most recently in this session, so its row can draw its
-/// chalk swipe in once.
 final class LastSaved extends Notifier<TastingId?> {
   @override
   TastingId? build() => null;

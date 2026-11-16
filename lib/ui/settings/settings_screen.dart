@@ -62,7 +62,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(content: Text(message)));
 
-  /// Runs [work] with the backup rows disabled and the progress bar showing.
   Future<void> _run(Future<void> Function() work) async {
     setState(() => _busy = true);
     try {
@@ -96,7 +95,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         if (mounted) _say(problem.message);
       case ImportReady(:final incoming):
         if (!mounted) return;
-        // Nothing is running while the owner decides.
         setState(() => _busy = false);
         if (!await _confirmReplace() || !mounted) return;
         setState(() => _busy = true);

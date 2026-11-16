@@ -13,7 +13,6 @@ DescriptorId idOf(String label) =>
 
 Finder chip(String label) => find.widgetWithText(FilterChip, label);
 
-/// Opens the picker from a button and records what it returns.
 final class PickerHost {
   Set<DescriptorId>? result;
   var returned = false;

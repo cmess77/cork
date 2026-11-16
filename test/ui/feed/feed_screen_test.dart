@@ -15,7 +15,6 @@ void tallView(WidgetTester tester) {
   addTearDown(tester.view.reset);
 }
 
-/// Local noon, so the month never shifts with the test machine's zone.
 DateTime localNoon(int year, int month, int day) =>
     DateTime(year, month, day, 12).toUtc();
 

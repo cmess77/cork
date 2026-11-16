@@ -21,7 +21,6 @@ enum _Sort {
 
 typedef _Saved = ({WishlistItem item, Wine wine});
 
-/// Wines saved to try. Swipe removes with Undo; Log opens the tasting form.
 class WishlistScreen extends ConsumerStatefulWidget {
   const WishlistScreen({super.key});
 

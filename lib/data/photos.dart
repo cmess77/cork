@@ -7,9 +7,6 @@ import 'package:path/path.dart' as p;
 import '../domain/ids.dart';
 import '../domain/journal.dart';
 
-/// Content-addressed label photos: each file is named by the SHA-256 of its
-/// bytes, so the same photo twice is one file and re-importing is harmless.
-/// Images arrive already downscaled by the picker.
 final class PhotoStore {
   PhotoStore(this.dir);
   final String dir;
@@ -30,8 +27,6 @@ final class PhotoStore {
 
   bool has(PhotoRef ref) => fileFor(ref).existsSync();
 
-  /// Deletes photo files no tasting references, and stray temp files. Run at
-  /// launch, before any draft can hold an unsaved ref.
   Future<int> sweep(Journal journal) async {
     final d = Directory(dir);
     if (!d.existsSync()) return 0;

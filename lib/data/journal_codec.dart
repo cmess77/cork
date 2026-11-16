@@ -5,22 +5,15 @@ import '../domain/scales.dart';
 import '../domain/tasting.dart';
 import '../domain/wine.dart';
 
-/// The document shape of every stored row and every backup file. Bump it and
-/// append a [DocUpgrade] to [docUpgrades] whenever a record's shape changes.
 const currentDocVersion = 1;
 
 typedef Doc = Map<String, Object?>;
 typedef RawDocs = ({List<Doc> wines, List<Doc> tastings, List<Doc> wishlist});
 
-/// One step of the migration ladder: raw JSON of version N in, N+1 out.
-/// Serves stored rows and imported files alike.
 typedef DocUpgrade = RawDocs Function(RawDocs docs);
 
-/// Index i upgrades version i+1 to i+2.
 const List<DocUpgrade> docUpgrades = [];
 
-/// Runs [docs] of [fromVersion] up the ladder to the version after the last
-/// step of [ladder].
 RawDocs upgradeDocs(
   RawDocs docs,
   int fromVersion, {
@@ -45,7 +38,6 @@ final class DecodedJournal extends Decoded {
 final class DecodeFailure extends Decoded {
   const DecodeFailure(this.path, this.message);
 
-  /// Where the problem is, such as 'tastings[14].score'.
   final String path;
   final String message;
 
@@ -58,8 +50,6 @@ final class NewerDocVersion extends Decoded {
   final int version;
 }
 
-/// JSON to and from the domain. Parse, do not validate: every enum name,
-/// range, and reference is checked here and nowhere else.
 abstract final class JournalCodec {
   static Doc encodeWine(Wine w) => _compact({
     'id': w.id.value,
@@ -128,7 +118,6 @@ abstract final class JournalCodec {
     wishlist: [for (final i in j.wishlist.values) encodeWishlistItem(i)],
   );
 
-  /// Upgrades [docs] from [docVersion] if needed, then parses them.
   static Decoded decode(int docVersion, RawDocs docs) {
     if (docVersion > currentDocVersion) return NewerDocVersion(docVersion);
     if (docVersion < 1) {
@@ -174,7 +163,6 @@ abstract final class JournalCodec {
 
 const corkFileFormat = 'cork.journal';
 
-/// The top-level object of `journal.json` in a backup.
 Doc encodeJournalFile(
   Journal journal, {
   required DateTime exportedAt,
@@ -192,7 +180,6 @@ Doc encodeJournalFile(
   };
 }
 
-/// What a picked file holds. [NotACorkFile] means the top level is not ours.
 sealed class FileDecoded {
   const FileDecoded();
 }
@@ -256,7 +243,6 @@ Object? _encodeVintage(Vintage? v) => switch (v) {
   null => null,
 };
 
-/// Absent key means "not recorded": nulls are never written.
 Doc _compact(Map<String, Object?> m) => {
   for (final e in m.entries)
     if (e.value != null) e.key: e.value,
@@ -372,7 +358,6 @@ final class _Fail implements Exception {
   final String message;
 }
 
-/// A JSON object with the path it was found at, for failure messages.
 final class _Obj {
   _Obj(Object? raw, this.path)
     : _m = raw is Map

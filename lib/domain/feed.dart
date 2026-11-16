@@ -4,7 +4,6 @@ import 'fold.dart';
 import 'journal.dart';
 import 'tasting.dart';
 
-/// What the journal feed shows. A value with `==`, so it can key a provider.
 final class FeedFilter {
   const FeedFilter({
     this.text = '',
@@ -32,7 +31,6 @@ final class FeedFilter {
 
   bool get isActive => this != none;
 
-  /// True when anything but the free text narrows the feed.
   bool get hasRefinements =>
       facets.values.any((s) => s.isNotEmpty) ||
       from != null ||
@@ -56,7 +54,6 @@ final class FeedFilter {
     maxScore: maxScore != null ? maxScore() : this.maxScore,
   );
 
-  /// Same filter with one facet value toggled.
   FeedFilter toggle(Dimension d, String keyId) {
     final next = {
       for (final e in facets.entries) e.key: {...e.value},

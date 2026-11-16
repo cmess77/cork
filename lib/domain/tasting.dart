@@ -3,7 +3,6 @@ import 'ids.dart';
 import 'scales.dart';
 import 'wine.dart';
 
-/// A 1 to 5 rating for aroma, flavor, or finish.
 extension type const Stars._(int value) {
   factory Stars(int value) {
     RangeError.checkValueInInterval(value, 1, 5, 'stars');
@@ -11,7 +10,6 @@ extension type const Stars._(int value) {
   }
 }
 
-/// Overall score in tenths, 10..50, so 0.1 steps are exact and groupable.
 extension type const Score._(int tenths) implements Object {
   static const min = Score._(10);
   static const max = Score._(50);
@@ -80,7 +78,7 @@ final class NonVintage extends Vintage {
   int get hashCode => 0;
 }
 
-/// An amount in the currency's minor unit (cents, or yen for JPY). No FX.
+/// An amount in the currency's minor unit (cents, or yen for JPY).
 final class Money {
   const Money(this.minor, this.currency);
   final int minor;
@@ -104,7 +102,6 @@ final class Money {
 
   double get major => minor / _pow10(currency.exponent);
 
-  /// "32.00": the decimal string the journal file stores.
   String formatAmount() {
     final exp = currency.exponent;
     if (exp == 0) return '$minor';
@@ -128,7 +125,6 @@ int _pow10(int exp) {
   return r;
 }
 
-/// A saved check-in. Only the wine, date, and score are required.
 final class Tasting {
   const Tasting({
     required this.id,
@@ -175,14 +171,12 @@ final class Tasting {
   final PhotoRef? photo;
 }
 
-/// The field a draft [Issue] belongs to, so the form can put the message there.
 enum DraftField { score, vintage, price }
 
 final class Issue {
   const Issue(this.field, this.message);
   final DraftField field;
 
-  /// Names the fix, such as "Set a score".
   final String message;
 }
 
@@ -200,8 +194,6 @@ final class Invalid<T> extends Checked<T> {
   final List<Issue> issues;
 }
 
-/// Tasting form state. Mutable on purpose: it lives in one form's State and
-/// mirrors its controls. [build] is the one gate from form to journal.
 final class TastingDraft {
   TastingDraft._({
     required this.wine,
@@ -210,8 +202,6 @@ final class TastingDraft {
     this.id,
   });
 
-  /// A new tasting. [tastedAt] defaults to [now]; the wine's index hints
-  /// prefill body and acidity.
   factory TastingDraft.forWine(
     Wine wine, {
     required DateTime now,
@@ -220,7 +210,6 @@ final class TastingDraft {
     ..body = wine.typicalBody
     ..acidity = wine.typicalAcidity;
 
-  /// Edits [t], whose wine is [wine].
   factory TastingDraft.edit(
     Tasting t,
     Wine wine, {

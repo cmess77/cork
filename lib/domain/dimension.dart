@@ -2,9 +2,6 @@ import 'fold.dart';
 import 'journal.dart';
 import 'tasting.dart';
 
-/// One group of a [Dimension]. [id] is the identity (folded, so case and
-/// accents never split a group), [label] is shown, and [sortKey] orders keys
-/// whose natural order is not alphabetical, such as vintages and price bands.
 final class GroupKey {
   const GroupKey(this.id, this.label, this.sortKey);
   final String id;
@@ -21,14 +18,11 @@ final class GroupKey {
   String toString() => 'GroupKey($id)';
 }
 
-/// The folded identity of a grape name.
 String grapeKey(String grape) => fold(grape);
 
 /// Price band edges in major units, shared by every currency.
 const priceBandEdges = [15, 30, 60];
 
-/// The ways a tasting can be grouped. One registry drives stats breakdowns,
-/// feed facets, and badge rules: adding a breakdown is adding a value here.
 enum Dimension {
   type('Type'),
   grape('Grape'),

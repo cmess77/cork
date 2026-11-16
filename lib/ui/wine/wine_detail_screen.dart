@@ -20,14 +20,10 @@ import '../widgets/tasting_row.dart';
 
 enum _Menu { editWine }
 
-/// One wine: its facts, the owner's verdict across tastings, and every
-/// tasting newest first, each expandable in place. A wishlist-only wine has
-/// no tastings yet and still renders.
 class WineDetailScreen extends ConsumerStatefulWidget {
   const WineDetailScreen({super.key, required this.id, this.expand});
   final WineId id;
 
-  /// Opened from a feed row or badge: that tasting starts expanded.
   final TastingId? expand;
 
   @override
@@ -180,8 +176,6 @@ class _WineDetailState extends ConsumerState<WineDetailScreen> {
   }
 }
 
-/// Name over winery. The large app bar reuses this widget in its 64dp
-/// collapsed bar, so each line is capped at one.
 class _Title extends StatelessWidget {
   const _Title(this.wine);
   final Wine wine;
@@ -262,7 +256,6 @@ List<_Fact> _tastingFacts(Tasting t) {
   ];
 }
 
-/// Two-column key and value grid; facts with no value are left out.
 class _FactsTable extends StatelessWidget {
   const _FactsTable(this.facts);
   final List<_Fact> facts;
@@ -300,7 +293,6 @@ class _FactsTable extends StatelessWidget {
 class _Verdict extends StatelessWidget {
   const _Verdict(this.tastings);
 
-  /// Newest first, as the journal gives them.
   final List<Tasting> tastings;
 
   @override
@@ -393,7 +385,6 @@ class _TastingItem extends StatelessWidget {
   );
 }
 
-/// What the row leaves out: notes, descriptors, structure, context, photo.
 class _TastingDetails extends ConsumerWidget {
   const _TastingDetails(this.entry);
   final Entry entry;
@@ -405,7 +396,6 @@ class _TastingDetails extends ConsumerWidget {
     final photo = t.photo;
     final dpr = MediaQuery.devicePixelRatioOf(context);
     return Padding(
-      // Lines up with the row's text column, past the 56dp thumb.
       padding: const EdgeInsets.fromLTRB(
         CorkSpace.gutter + 56 + CorkSpace.lg,
         0,

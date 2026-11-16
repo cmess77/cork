@@ -1,8 +1,7 @@
 import '../../domain/wine.dart';
 
-/// Suggestions for the country field of a hand-entered wine. Codes are the
-/// bundled index's own (it writes the United Kingdom as 'UK'), so stats group
-/// a hand-entered wine with index wines from the same country.
+/// Codes are the bundled index's own (it writes the United Kingdom as 'UK'),
+/// so stats group a hand-entered wine with index wines from the same country.
 const wineCountries = [
   Country('AR', 'Argentina'),
   Country('AM', 'Armenia'),

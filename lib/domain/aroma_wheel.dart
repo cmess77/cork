@@ -1,6 +1,5 @@
 import 'ids.dart';
 
-/// The eight wheel categories. The theme owns one colour per value.
 enum AromaFamily {
   fruit('Fruit'),
   floral('Floral'),
@@ -50,8 +49,6 @@ final class AromaWheel {
 
   Iterable<Descriptor> get descriptors => _byId.values;
 
-  /// Total. An id this build does not know (from a newer Cork, or retired)
-  /// still renders, labelled from its last slug segment.
   Descriptor resolve(DescriptorId id) =>
       _byId[id] ??
       Descriptor(id, _labelFromSlug(id.value), _familyFromSlug(id.value));

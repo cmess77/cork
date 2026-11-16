@@ -33,7 +33,6 @@ final class FakePhotoPicker implements LabelPhotoPicker {
   }
 }
 
-/// Opens the form from a button and records what it resolves to.
 final class FormHost {
   bool? result;
 

@@ -2,24 +2,19 @@ import 'dimension.dart';
 import 'journal.dart';
 import 'wine.dart';
 
-/// Rules are data. No badge is ever written to disk: every status is
-/// re-derived from the tastings, so an edit or delete re-derives it too.
 sealed class BadgeRule {
   const BadgeRule(this.id, this.title, this.description, this.target);
   final String id;
   final String title;
 
-  /// The rule in words, such as "Taste wines from 10 countries".
   final String description;
   final int target;
 }
 
-/// N tastings in total.
 final class TastingCount extends BadgeRule {
   const TastingCount(super.id, super.title, super.description, super.target);
 }
 
-/// N distinct keys of one dimension, such as 5 grapes.
 final class DistinctKeys extends BadgeRule {
   const DistinctKeys(
     super.id,
@@ -31,7 +26,6 @@ final class DistinctKeys extends BadgeRule {
   final Dimension dimension;
 }
 
-/// N tastings under one key of a dimension, such as 10 of a single grape.
 final class SameKey extends BadgeRule {
   const SameKey(
     super.id,
@@ -43,7 +37,6 @@ final class SameKey extends BadgeRule {
   final Dimension dimension;
 }
 
-/// A tasting of every [WineType].
 final class EveryType extends BadgeRule {
   EveryType(String id, String title, String description)
     : super(id, title, description, WineType.values.length);
@@ -103,7 +96,7 @@ final class BadgeStatus {
   /// Clamped to `rule.target`.
   final int progress;
 
-  /// When the tasting that crossed the line was tasted. Derived, never stored.
+  /// When the tasting that crossed the line was tasted.
   final DateTime? earnedAt;
 
   /// The tastings that count toward the rule, oldest first.
@@ -112,7 +105,6 @@ final class BadgeStatus {
   bool get earned => earnedAt != null;
 }
 
-/// One chronological pass with running counters per rule.
 List<BadgeStatus> deriveBadges(
   Iterable<Entry> entries, {
   List<BadgeRule>? rules,
@@ -178,8 +170,6 @@ BadgeStatus _replay(BadgeRule rule, List<Entry> oldestFirst) {
 int _clamp(int progress, BadgeRule rule) =>
     progress > rule.target ? rule.target : progress;
 
-/// Rules earned in [after] and not in [before]. Drives the celebration after
-/// a save, with no stored "already shown" flag.
 List<BadgeRule> newlyEarned(Journal before, Journal after) {
   final had = {
     for (final s in deriveBadges(before.feed))

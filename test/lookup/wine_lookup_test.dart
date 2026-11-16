@@ -26,7 +26,6 @@ void main() {
     name: 'Garage Margaux',
     type: WineType.red,
   );
-  // The user renamed this index wine; the journal's copy must win.
   final pavillon = indexWine(
     3,
     name: 'Pavillon Blanc (cellar bottle)',
@@ -34,7 +33,6 @@ void main() {
     region: 'Margaux',
     type: WineType.white,
   );
-  // Its journal copy no longer mentions Margaux anywhere.
   final renamed = indexWine(
     4,
     name: 'House red',
