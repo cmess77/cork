@@ -113,7 +113,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Replace your journal with this backup?'),
         content: Text(
-          'Your current ${countLabel(current, 'tasting')} will be replaced.',
+          current == 0
+              ? 'Your journal has no tastings yet. Its wines and wishlist '
+                    'will be replaced.'
+              : 'Your current ${countLabel(current, 'tasting')} will be '
+                    'replaced.',
         ),
         actions: [
           TextButton(

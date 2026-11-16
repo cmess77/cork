@@ -121,17 +121,22 @@ class _ShellState extends State<Shell> {
               child: body,
             ),
           ),
-          NavigationBar(
-            selectedIndex: _index,
-            onDestinationSelected: (i) => setState(() => _index = i),
-            destinations: [
-              for (final d in _destinations)
-                NavigationDestination(
-                  icon: Icon(d.icon),
-                  selectedIcon: Icon(d.selectedIcon),
-                  label: d.label,
-                ),
-            ],
+          // NavigationBar's own SafeArea would also pad for the status bar.
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: NavigationBar(
+              selectedIndex: _index,
+              onDestinationSelected: (i) => setState(() => _index = i),
+              destinations: [
+                for (final d in _destinations)
+                  NavigationDestination(
+                    icon: Icon(d.icon),
+                    selectedIcon: Icon(d.selectedIcon),
+                    label: d.label,
+                  ),
+              ],
+            ),
           ),
         ],
       ),
