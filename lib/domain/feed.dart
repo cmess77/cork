@@ -31,13 +31,6 @@ final class FeedFilter {
 
   bool get isActive => this != none;
 
-  bool get hasRefinements =>
-      facets.values.any((s) => s.isNotEmpty) ||
-      from != null ||
-      to != null ||
-      minScore != null ||
-      maxScore != null;
-
   FeedFilter copyWith({
     String? text,
     Map<Dimension, Set<String>>? facets,

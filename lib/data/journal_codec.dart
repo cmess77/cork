@@ -210,26 +210,23 @@ FileDecoded decodeJournalFile(Object? json) {
   }
   final version = json['version'];
   if (version is! int) return const FileMalformed('version', 'missing');
-  List<Doc> docs(String key) => switch (json[key]) {
+  List<Doc>? docs(String key) => switch (json[key]) {
     null => const [],
     final List l when l.every((e) => e is Map) => [
       for (final e in l) (e as Map).cast<String, Object?>(),
     ],
-    _ => throw const FormatException(),
+    _ => null,
   };
-  final RawDocs raw;
-  try {
-    raw = (
-      wines: docs('wines'),
-      tastings: docs('tastings'),
-      wishlist: docs('wishlist'),
-    );
-  } on FormatException {
+  final wines = docs('wines');
+  final tastings = docs('tastings');
+  final wishlist = docs('wishlist');
+  if (wines == null || tastings == null || wishlist == null) {
     return const FileMalformed(
       '',
       'wines, tastings, and wishlist must be lists',
     );
   }
+  final RawDocs raw = (wines: wines, tastings: tastings, wishlist: wishlist);
   return switch (JournalCodec.decode(version, raw)) {
     DecodedJournal(:final journal) => FileJournal(journal),
     NewerDocVersion(:final version) => FileTooNew(version),

@@ -23,7 +23,12 @@ final class SettingsStore extends ChangeNotifier {
     var theme = ThemeChoice.system;
     final json = _readJson(file);
     if (json is Map) {
-      currency = CurrencyCode.tryParse('${json['currency']}') ?? fallback;
+      currency =
+          switch (json['currency']) {
+            final String s => CurrencyCode.tryParse(s),
+            _ => null,
+          } ??
+          fallback;
       theme = ThemeChoice.values.firstWhere(
         (t) => t.name == json['theme'],
         orElse: () => ThemeChoice.system,

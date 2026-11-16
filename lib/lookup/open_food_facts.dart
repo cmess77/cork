@@ -21,8 +21,8 @@ final class OpenFoodFacts {
        _now = now ?? DateTime.now;
 
   /// Two under Open Food Facts' documented 10 searches per minute per IP.
-  static const budget = 8;
-  static const window = Duration(seconds: 60);
+  static const _budget = 8;
+  static const _window = Duration(seconds: 60);
 
   final String _userAgent;
   final Duration _timeout;
@@ -36,11 +36,11 @@ final class OpenFoodFacts {
     if (terms.isEmpty) return const OnlineHits([]);
 
     final now = _now();
-    while (_sent.isNotEmpty && !now.isBefore(_sent.first.add(window))) {
+    while (_sent.isNotEmpty && !now.isBefore(_sent.first.add(_window))) {
       _sent.removeFirst();
     }
-    if (_sent.length >= budget) {
-      return OnlineRateLimited(_sent.first.add(window).difference(now));
+    if (_sent.length >= _budget) {
+      return OnlineRateLimited(_sent.first.add(_window).difference(now));
     }
     _sent.addLast(now);
 

@@ -105,13 +105,10 @@ final class BadgeStatus {
   bool get earned => earnedAt != null;
 }
 
-List<BadgeStatus> deriveBadges(
-  Iterable<Entry> entries, {
-  List<BadgeRule>? rules,
-}) {
+List<BadgeStatus> deriveBadges(Iterable<Entry> entries) {
   final oldestFirst = entries.toList()
     ..sort((a, b) => compareEntriesNewestFirst(b, a));
-  return [for (final rule in rules ?? badgeRules) _replay(rule, oldestFirst)];
+  return [for (final rule in badgeRules) _replay(rule, oldestFirst)];
 }
 
 BadgeStatus _replay(BadgeRule rule, List<Entry> oldestFirst) {
