@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T00:00:00Z",
+  "title": "Design System: Cork",
+  "extensions": {
+    "colorMeta": {
+      "slate-2": { "role": "neutral", "displayName": "Board Slate", "canonical": "#1B2124", "tonalRamp": ["#0E1214", "#151A1D", "#1B2124", "#21282C", "#293135", "#343D42", "#4F5A60", "#76838A", "#A3AEB3", "#CDD4D6", "#EDF0F0"] },
+      "chalk-white": { "role": "neutral", "displayName": "Chalk White", "canonical": "#ECE9E1" },
+      "chalk-yellow": { "role": "primary", "displayName": "Chalk Yellow", "canonical": "#EBCB6B", "tonalRamp": ["#261C00", "#4A3D10", "#7C6110", "#A8872A", "#CFAE4C", "#EBCB6B", "#F7E3A6", "#FDF3D6"] },
+      "chalk-blue": { "role": "secondary", "displayName": "Chalk Blue", "canonical": "#94C2D3", "tonalRamp": ["#001F29", "#0B2A35", "#1F4351", "#2E6577", "#5F96A8", "#94C2D3", "#BFE6F4", "#E3F5FB"] },
+      "chalk-pink": { "role": "tertiary", "displayName": "Chalk Pink", "canonical": "#E9A6B4", "tonalRamp": ["#3A0716", "#3D1520", "#5A2633", "#8C4256", "#BD7083", "#E9A6B4", "#FAD6DE", "#FFEEF1"] },
+      "tablecloth": { "role": "neutral", "displayName": "Tablecloth", "canonical": "#F7F6F1" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Overall score on the tasting form and wine detail only." },
+      "board-heading": { "displayName": "Board heading", "purpose": "Month and section heads, caps set by caller." },
+      "score": { "displayName": "Score", "purpose": "Every score in a row, right-aligned, tabular, chalk yellow." }
+    },
+    "shadows": [
+      { "name": "fab", "value": "Material elevation 2, pressed 4", "purpose": "Only the extended FAB carries a shadow; all other depth is tonal." }
+    ],
+    "motion": [
+      { "name": "short", "value": "150ms", "purpose": "Chip and toggle state changes." },
+      { "name": "medium", "value": "300ms", "purpose": "Container transforms, fade-through between destinations." },
+      { "name": "long", "value": "500ms", "purpose": "Large sheet expansion." },
+      { "name": "swipe", "value": "350ms emphasized-decelerate", "purpose": "Chalk swipe draws in once on save." },
+      { "name": "ease-standard", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Default easing." },
+      { "name": "ease-emphasized-decelerate", "value": "cubic-bezier(0.05, 0.7, 0.1, 1)", "purpose": "Entering elements and the chalk swipe." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "0-599dp" },
+      { "name": "medium", "value": "600-839dp" },
+      { "name": "expanded", "value": "840dp+" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Extended FAB",
+      "kind": "button",
+      "refersTo": "fab-extended",
+      "description": "The single primary action: Log a glass.",
+      "html": "<button class=\"ds-fab\">Log a glass</button>",
+      "css": ".ds-fab { background: #EBCB6B; color: #1B2124; border: none; border-radius: 16px; height: 56px; padding: 0 20px; font: 600 14px/20px 'Sofia Sans', sans-serif; letter-spacing: 0.1px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .ds-fab:hover { background: #F2D886; } .ds-fab:focus-visible { outline: 3px solid #94C2D3; outline-offset: 2px; }"
+    },
+    {
+      "name": "Navigation bar",
+      "kind": "nav",
+      "refersTo": "navigation-bar",
+      "description": "Slate shell in both themes; five destinations.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-i on\">Journal</a><a class=\"ds-nav-i\">Wishlist</a><a class=\"ds-nav-i\">Stats</a><a class=\"ds-nav-i\">Badges</a><a class=\"ds-nav-i\">Settings</a></nav>",
+      "css": ".ds-nav { display: flex; background: #21282C; height: 72px; align-items: center; justify-content: space-around; } .ds-nav-i { color: #A9B3B7; font: 600 12px/16px 'Sofia Sans', sans-serif; padding: 6px 16px; border-radius: 999px; } .ds-nav-i.on { background: #4A3D10; color: #F7E3A6; } .ds-nav-i:hover { color: #ECE9E1; }"
+    },
+    {
+      "name": "Tasting row with chalk swipe",
+      "kind": "custom",
+      "refersTo": "score-numeral",
+      "description": "Feed row: wine name, chalk swipe in glass colour, winery and vintage, right-aligned score.",
+      "html": "<div class=\"ds-row\"><div class=\"ds-sw\"><span></span></div><div class=\"ds-txt\"><div class=\"ds-name\">Barolo Bussia</div><div class=\"ds-chalk\"></div><div class=\"ds-sub\">Prunotto · 2016</div></div><div class=\"ds-score\">4.3</div></div>",
+      "css": ".ds-row { display: flex; align-items: center; gap: 16px; background: #1B2124; padding: 12px 16px; } .ds-sw { width: 48px; height: 48px; border-radius: 50%; background: #F7F6F1; display: grid; place-items: center; } .ds-sw span { width: 36px; height: 36px; border-radius: 50%; background: #7A2B25; } .ds-txt { flex: 1; } .ds-name { color: #ECE9E1; font: 600 16px/24px 'Sofia Sans Condensed', sans-serif; } .ds-chalk { width: 56px; height: 6px; margin: 2px 0 4px; background: #7A2B25; border-radius: 3px 1px 4px 1px; opacity: 0.9; } .ds-sub { color: #A9B3B7; font: 400 14px/20px 'Sofia Sans', sans-serif; } .ds-score { color: #EBCB6B; font: 700 28px/32px 'Sofia Sans Extra Condensed', sans-serif; font-variant-numeric: tabular-nums; } .ds-row:hover { background: #21282C; }"
+    },
+    {
+      "name": "Glass swatch",
+      "kind": "custom",
+      "refersTo": "glass-swatch",
+      "description": "WSET glass colour on tablecloth white, named below.",
+      "html": "<button class=\"ds-glass on\"><span class=\"ds-disc\"></span><span class=\"ds-gl\">Ruby</span></button>",
+      "css": ".ds-glass { background: none; border: none; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; } .ds-disc { width: 36px; height: 36px; border-radius: 50%; background: #7D1429; box-shadow: 0 0 0 6px #F7F6F1, 0 0 0 7px #A3AEB3; margin: 7px; } .ds-glass.on .ds-disc { box-shadow: 0 0 0 6px #F7F6F1, 0 0 0 9px #EBCB6B; } .ds-gl { color: #ECE9E1; font: 600 12px/16px 'Sofia Sans', sans-serif; } .ds-glass:focus-visible { outline: 2px solid #94C2D3; }"
+    },
+    {
+      "name": "Descriptor chip",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Aroma descriptor filter chip with category dot.",
+      "html": "<button class=\"ds-chip on\"><i></i>Black cherry</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #343D42; background: transparent; color: #ECE9E1; font: 600 14px/20px 'Sofia Sans', sans-serif; } .ds-chip i { width: 8px; height: 8px; border-radius: 50%; background: #E88A8A; } .ds-chip.on { background: #1F4351; border-color: #1F4351; } .ds-chip:hover { background: #21282C; }"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "text-field",
+      "description": "Filled outlined field, 8dp corners.",
+      "html": "<input class=\"ds-input\" placeholder=\"Where\">",
+      "css": ".ds-input { height: 56px; padding: 0 16px; background: #151A1D; color: #ECE9E1; border: 1px solid #343D42; border-radius: 8px; font: 400 16px/24px 'Sofia Sans', sans-serif; } .ds-input::placeholder { color: #A9B3B7; } .ds-input:focus { outline: none; border: 2px solid #EBCB6B; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tasting-Room Slate",
+    "overview": "Cork looks like the board a cellar door chalks its pours on. A blue-green slate carries everything; text is chalk; scores are chalked in yellow the way a board prices a glass; and each tasting leaves a dry-brush swipe of its actual glass colour. It is a working Android app first: Material 3 structure, navigation, and controls, with the world entering only through palette, type, density, and that one signature move.",
+    "keyCharacteristics": [
+      "Slate ground on an eleven-step ramp; tonal depth only.",
+      "Chalk yellow means \"your score\" or \"the main action\", nothing else.",
+      "Every tasting carries a chalk swipe in its WSET glass colour.",
+      "Condensed caps for board headings; humanist sans for reading.",
+      "Stock Material 3 components, themed, never re-invented."
+    ],
+    "rules": [
+      { "name": "The One Job Rule", "body": "Each chalk colour owns one meaning. Yellow is score and primary action; blue is selection; pink is wishlist.", "section": "colors" },
+      { "name": "The Wine Is Data Rule", "body": "Glass colours appear only where they describe a real tasting or a choice in the picker.", "section": "colors" },
+      { "name": "The Tablecloth Rule", "body": "A glass colour is always drawn on tablecloth white or as a swipe on slate, never as a fill behind text.", "section": "colors" },
+      { "name": "The Right-Hand Figure Rule", "body": "Scores, counts, and prices sit right-aligned in tabular figures tight to the gutter.", "section": "typography" },
+      { "name": "The Caps Belong to the Board Rule", "body": "Only board headings are set in caps.", "section": "typography" },
+      { "name": "The One Step Rule", "body": "A child surface sits exactly one ramp step from its parent.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do take every colour from Theme.of(context).colorScheme or Theme.of(context).cork; never hard-code hex in widgets.",
+      "Do right-align scores in the Score style and chalk yellow.",
+      "Do draw glass colour only through glassDisplayColor on tablecloth or as a chalk swipe.",
+      "Do keep the shell slate in light theme.",
+      "Do honor Remove animations with instant cuts."
+    ],
+    "donts": [
+      "Don't use burgundy, gold foil, cream paper, or an engraved serif.",
+      "Don't tint surfaces with primary (surfaceTint stays transparent).",
+      "Don't use chalk yellow for anything other than scores and the primary action.",
+      "Don't put glass colour behind text or use it in chrome.",
+      "Don't set wine names in caps or use handwriting fonts; the chalk is in the swipe, not the type.",
+      "Don't use emoji or unicode glyphs for icons; use Material Symbols (rounded, weight 400).",
+      "Don't stack FABs or put a FAB on the tasting form."
+    ]
+  }
+}
