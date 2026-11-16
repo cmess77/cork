@@ -159,9 +159,7 @@ class _ChalkSwipeState extends State<ChalkSwipe>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (widget.drawIn &&
-        !_drawn &&
-        !MediaQuery.disableAnimationsOf(context)) {
+    if (widget.drawIn && !_drawn && !MediaQuery.disableAnimationsOf(context)) {
       _drawn = true;
       _progress.value = 0;
       _progress.animateTo(1, curve: CorkMotion.emphasizedDecelerate);
