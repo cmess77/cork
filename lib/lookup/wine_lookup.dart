@@ -1,4 +1,11 @@
+import 'dart:typed_data';
+
+import '../domain/fold.dart';
+import '../domain/ids.dart';
+import '../domain/journal.dart';
 import '../domain/wine.dart';
+import 'open_food_facts.dart';
+import 'wine_index.dart';
 
 /// Finds wines. Hides the bundled index, Open Food Facts, the journal's own
 /// wines, FTS syntax, HTTP, rate limiting, and asset installation.
@@ -37,4 +44,79 @@ final class OnlineRateLimited extends OnlineResult {
 /// No network, timeout, server error, or a payload that would not parse.
 final class OnlineUnavailable extends OnlineResult {
   const OnlineUnavailable();
+}
+
+/// The app's [WineLookup]: the bundled index on a background isolate, the
+/// journal's own wines, and Open Food Facts.
+final class BundledWineLookup implements WineLookup {
+  BundledWineLookup._(this._index, this._online, this._journal);
+
+  /// Installs the bundled index under [indexDir] (once per asset version) and
+  /// starts the isolate that serves it. [journal] is read on every keystroke,
+  /// so it must return the current value, not a snapshot.
+  static Future<BundledWineLookup> open({
+    required String indexDir,
+    required Future<ByteData> Function() loadAsset,
+    required Journal Function() journal,
+    required String appVersion,
+  }) async {
+    final path = await installWineIndex(indexDir, loadAsset: loadAsset);
+    return BundledWineLookup._(
+      await IndexWorker.spawn(path),
+      OpenFoodFacts(appVersion: appVersion),
+      journal,
+    );
+  }
+
+  final IndexWorker _index;
+  final OpenFoodFacts _online;
+  final Journal Function() _journal;
+
+  @override
+  Future<List<Wine>> suggest(String text, {int limit = 50}) async {
+    if (limit <= 0) return const [];
+    final journal = _journal();
+    final query = FtsQuery.parse(text);
+    if (query == null) return journal.recentWines.take(limit).toList();
+
+    final words = [for (final t in query.tokens) fold(t)];
+    final out = journal.recentWines
+        .where((w) => _matches(w, words))
+        .take(limit)
+        .toList();
+    final shown = <WineId>{for (final w in out) w.id};
+
+    List<Wine> hits;
+    try {
+      hits = await _index.search(query, limit);
+    } catch (_) {
+      hits = const [];
+    }
+    for (final hit in hits) {
+      if (out.length >= limit) break;
+      if (shown.add(hit.id)) out.add(journal.wines[hit.id] ?? hit);
+    }
+    return out;
+  }
+
+  @override
+  Future<OnlineResult> searchOnline(String text) => _online.search(text);
+
+  @override
+  Future<void> close() async {
+    _online.close();
+    await _index.close();
+  }
+}
+
+/// Every typed word must start some word of the wine's name, winery, grapes,
+/// or region, the same rule the index's prefix query applies.
+bool _matches(Wine wine, List<String> words) {
+  final haystack = [
+    ...foldedWords(wine.name),
+    if (wine.winery case final winery?) ...foldedWords(winery),
+    for (final g in wine.grapes) ...foldedWords(g),
+    if (wine.region case final region?) ...foldedWords(region),
+  ];
+  return words.every((w) => haystack.any((h) => h.startsWith(w)));
 }
