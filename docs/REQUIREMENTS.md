@@ -6,7 +6,7 @@ Cork is a personal wine journal for Android. Its owner logs each wine they taste
 
 - Flutter, Android only for now. Package `one.bigpapa.cork`.
 - All data lives on the device in SQLite. There is no account and no server.
-- Backup is export and import of the whole journal as a single JSON file. CSV export of tastings is a convenience for spreadsheets.
+- Backup is export and import of the whole journal as a `.cork` zip holding `journal.json` and a `photos/` folder. A photo-free plain-JSON export is also offered. Import replaces the journal after writing an automatic safety backup. CSV export of tastings is a convenience for spreadsheets.
 
 ## Wine lookup
 
