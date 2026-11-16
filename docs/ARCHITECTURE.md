@@ -74,3 +74,15 @@ Deviations found while building, each with its reason. Where an entry here disag
 - **Backup API.** `Backup.preview` takes the picked file's path, not its text, and tells a `.cork` zip from plain JSON by its magic bytes, reading only `journal.json` from the zip. `Incoming` keeps the source path so `restore` streams photos out of the zip one at a time. `restore` returns the safety backup, which is a full `.cork`. Problems are `NotCorkBackup`, `BackupTooNew`, and `BackupDamaged(path, detail)`, each with the snackbar message. The file-level parse (`encodeJournalFile`, `decodeJournalFile`) is pure and lives in `journal_codec.dart`.
 - **Upgrade safety backup is the composition root's job.** `JournalStore.open(path, beforeUpgrade:)` hands the old raw docs to the callback before it rewrites any row. With one doc version so far, the ladder function is tested with a fake two-step ladder, and the store's upgrade branch cannot run yet.
 - **Settings live outside the journal.** Default currency and theme are a small `settings.json` (`SettingsStore`), so importing a backup never changes preferences.
+- **UI deviations from DESIGN.md**, each taken as the first reasonable option:
+  - Manual entry offers all six `WineType` values as choice chips (DESIGN lists five segments; fortified exists in the domain) and requires a type, since a silent default would skew stats.
+  - Sweetness and structure use the labelled discrete slider on phones: six labels at 12sp need more than the 328dp a phone leaves.
+  - The app-bar Save on the tasting form is chalk white (`onShell`), because light-theme ochre on the slate shell lacks contrast. In edit mode the discard dialog reads "Discard your changes?", since "Discard this tasting?" reads as delete there.
+  - After a failed online search the Search online button stays enabled for a retry; after hits it is disabled until the query changes.
+  - Export journal writes the `.cork` zip (with photos); "Export without photos" writes the plain JSON. Theme is a segmented button.
+  - The picker's category tabs are pages: tapping a wheel wedge switches the page rather than scrolling one long list.
+  - Stats opens on All time and has an empty-range message. The glasses strip uses 28dp swipes and skips tastings with no colour. Locked-badge progress bars are chalk grey, not yellow, per the One Job Rule.
+  - The feed hides its FAB on the empty board (the filled button is the one action). Wine detail's FAB reads "Log a glass" until the wine has a tasting. Long-press opens a bottom sheet with Edit and Delete. Filters apply live in their sheet.
+  - Pushed routes use `corkRoute`, which cuts instantly under Remove animations, because the predictive-back transition ignores that setting.
+  - Not built: the tablet two-pane layouts for the tasting form and wine detail. The navigation rail on expanded widths is built.
+- **"Recent" in search is recent activity, not views.** It lists `Journal.recentWines` (tastings and wishlist adds), because recording views would be mutable state with no other use.
