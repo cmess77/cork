@@ -25,12 +25,29 @@ fetch_release() {
     "$api/releases/tags/$tag")"
   case "$status" in
     200 | 404) ;;
-    *) echo "GET releases/tags/$tag returned HTTP $status" >&2; exit 2 ;;
+    *) echo "GET releases/tags/$tag returned HTTP $status" >&2; return 2 ;;
   esac
 }
 
 has_asset() {
   grep -Eq "\"name\": *\"${asset//./\.}\"" "$response"
+}
+
+create_release() {
+  local prerelease=false body
+  case "$version" in *-*) prerelease=true ;; esac
+  body="$(dart tool/release.dart notes "$version" --json)"
+  curl -fsS -X POST "$api/releases" -H "$auth" \
+    -H 'Content-Type: application/json' \
+    -d "{\"tag_name\":\"$tag\",\"name\":\"Cork $version\",\"body\":$body,\"prerelease\":$prerelease}" \
+    -o "$response"
+}
+
+upload_asset() {
+  local release_id
+  release_id="$(grep -o '"id": *[0-9]*' "$response" | head -1 | grep -o '[0-9]*')"
+  curl -fsS -X POST "$api/releases/$release_id/assets?name=$asset" \
+    -H "$auth" -F "attachment=@dist/$asset" > /dev/null
 }
 
 case "$command" in
@@ -39,22 +56,20 @@ case "$command" in
     [ "$status" = 200 ] && has_asset
     ;;
   publish)
-    fetch_release
-    if [ "$status" = 404 ]; then
-      prerelease=false
-      case "$version" in *-*) prerelease=true ;; esac
-      body="$(dart tool/release.dart notes "$version" --json)"
-      curl -fsS -X POST "$api/releases" -H "$auth" \
-        -H 'Content-Type: application/json' \
-        -d "{\"tag_name\":\"$tag\",\"name\":\"Cork $version\",\"body\":$body,\"prerelease\":$prerelease}" \
-        -o "$response"
-    fi
-    if ! has_asset; then
-      release_id="$(grep -o '"id": *[0-9]*' "$response" | head -1 | grep -o '[0-9]*')"
-      curl -fsS -X POST "$api/releases/$release_id/assets?name=$asset" \
-        -H "$auth" -F "attachment=@dist/$asset" > /dev/null
-    fi
-    echo "Published $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag"
+    # Forgejo records a pushed tag in the background, so creating its release
+    # right after the push can fail. Each attempt re-reads what exists.
+    for delay in 0 5 15 30 60; do
+      sleep "$delay"
+      fetch_release || continue
+      if [ "$status" = 404 ]; then
+        create_release || continue
+      fi
+      has_asset || upload_asset || continue
+      echo "Published $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag"
+      exit 0
+    done
+    echo "could not publish the release for $tag" >&2
+    exit 1
     ;;
   *)
     echo "usage: forgejo_release.sh (complete|publish) TAG" >&2

@@ -69,10 +69,15 @@ jobs:
           git config user.email 'release@cork.invalid'
           before="$(git rev-parse HEAD)"
           dart tool/release.dart cut --if-needed
-          tag="$(git describe --tags --exact-match HEAD 2>/dev/null)" || exit 0
+          head="$(git rev-parse HEAD)"
+          # Finish the newest release: the one just cut, or one an earlier run
+          # tagged and pushed but failed to publish.
+          tag="$(git tag --merged HEAD --list 'v[0-9]*' --sort=-version:refname | head -1)"
+          [ -n "$tag" ] || exit 0
           bash tool/ci/forgejo_release.sh complete "$tag" && exit 0
+          git checkout -q "$tag"
           bash tool/ci/build_release_apk.sh "$tag"
-          if [ "$(git rev-parse HEAD)" != "$before" ]; then
-            git push --atomic origin HEAD:main "$tag"
+          if [ "$head" != "$before" ]; then
+            git push --atomic origin "$head:refs/heads/main" "refs/tags/$tag"
           fi
           bash tool/ci/forgejo_release.sh publish "$tag"
