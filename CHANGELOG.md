@@ -5,6 +5,12 @@ written by `dart tool/release.dart cut` from the
 [Conventional Commits](https://www.conventionalcommits.org) since the last
 release.
 
+## 0.6.0 (2026-11-21)
+
+### Features
+
+- **branding:** add Cork app logo and launcher icon (2ddfbdb)
+
 ## 0.5.1 (2026-11-16)
 
 ### Fixes
