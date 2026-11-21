@@ -5,6 +5,12 @@ written by `dart tool/release.dart cut` from the
 [Conventional Commits](https://www.conventionalcommits.org) since the last
 release.
 
+## 0.6.1 (2026-11-21)
+
+### Performance
+
+- **release:** ship only the 64-bit ARM build (94cce12)
+
 ## 0.6.0 (2026-11-21)
 
 ### Features
