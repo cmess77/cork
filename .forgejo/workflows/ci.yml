@@ -1,8 +1,12 @@
-# Analyze and test every push and PR to main. A push to main with a feat,
-# fix, or perf commit since the last release then cuts that release: it
-# commits the changelog and version, tags, pushes, and publishes the signed
-# APK. The push
-# mirror carries the tag to GitHub, which publishes the same APK there.
+# Analyze and test every push and PR to main. A push to main (or a manual run
+# on main) then releases: `cut --if-needed` commits the changelog and version
+# and tags when a feat, fix, or perf commit is waiting, and a hand-cut tag
+# pushed with main is already HEAD. Unless the Forgejo release for that tag
+# is complete, the job builds the signed APK, pushes the release commit and
+# tag atomically, then publishes. Building before pushing means a failed
+# build leaves no orphan tag, and every step skips work already done, so
+# re-running the job (workflow_dispatch) finishes a release that crashed.
+# The push mirror carries the tag to GitHub, which publishes the same APK.
 #
 # `runs-on: default` matches the registered Forgejo runner label.
 
@@ -52,7 +56,7 @@ jobs:
         run: flutter test
 
       - name: Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
         env:
           CORK_KEYSTORE_BASE64: ${{ secrets.CORK_KEYSTORE_BASE64 }}
           CORK_KEYSTORE_PASSWORD: ${{ secrets.CORK_KEYSTORE_PASSWORD }}
@@ -63,8 +67,10 @@ jobs:
           git config user.email 'release@cork.invalid'
           before="$(git rev-parse HEAD)"
           dart tool/release.dart cut --if-needed
-          [ "$(git rev-parse HEAD)" != "$before" ] || exit 0
-          tag="$(git describe --tags --exact-match HEAD)"
-          git push --follow-tags origin HEAD:main
+          tag="$(git describe --tags --exact-match HEAD 2>/dev/null)" || exit 0
+          bash tool/ci/forgejo_release.sh complete "$tag" && exit 0
           bash tool/ci/build_release_apk.sh "$tag"
-          bash tool/ci/publish_forgejo_release.sh "$tag"
+          if [ "$(git rev-parse HEAD)" != "$before" ]; then
+            git push --atomic origin HEAD:main "$tag"
+          fi
+          bash tool/ci/forgejo_release.sh publish "$tag"
