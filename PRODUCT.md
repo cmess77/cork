@@ -42,7 +42,7 @@ Untappd's check-in and stats loop applied to wine, with none of the social layer
 
 ## Brand Commitments
 
-Name: Cork. No other binding assets, logo, or voice exist yet.
+Name: Cork. Logo: a chalk-yellow (`#EBCB6B`) cork on slate (`#1B2124`) with a berry wine-stain ring; masters and the generator live in `design/logo/`, and `python3 design/logo/make_icons.py` regenerates the launcher icons. No other binding assets or voice exist yet.
 
 ## Evidence on Hand
 
