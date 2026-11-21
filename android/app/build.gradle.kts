@@ -54,3 +54,14 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+// Release APKs carry 64-bit ARM code only. --target-platform limits Flutter's
+// own libraries, but plugins that build native code (jni) still add every
+// ABI, so drop the rest when packaging. Debug builds keep them for emulators.
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.packaging.jniLibs.excludes.addAll(
+            listOf("lib/armeabi-v7a/**", "lib/x86/**", "lib/x86_64/**"),
+        )
+    }
+}

@@ -52,9 +52,19 @@ fi
 
 flutter config --no-analytics
 flutter pub get
+# Current Android phones are 64-bit ARM, so the release carries only that
+# native code: a universal APK would be three times the size. Fail if any
+# other ABI slips in.
 flutter build apk --release \
+  --target-platform android-arm64 \
   --build-name="$version" \
   --build-number="$build_number"
+abis="$(jar tf build/app/outputs/flutter-apk/app-release.apk \
+  | sed -n 's#^lib/\([^/]*\)/.*#\1#p' | sort -u | tr '\n' ' ')"
+if [ "$abis" != "arm64-v8a " ]; then
+  echo "APK has native code for: ${abis:-none}; expected only arm64-v8a" >&2
+  exit 1
+fi
 
 mkdir -p dist
 cp build/app/outputs/flutter-apk/app-release.apk "dist/cork-$version.apk"
